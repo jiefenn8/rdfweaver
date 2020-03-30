@@ -1,0 +1,107 @@
+plugins {
+    id 'idea'
+    id 'java'
+    id 'maven-publish'
+    id 'com.jfrog.bintray' version '1.8.4'
+    id 'jacoco'
+}
+
+group 'com.github.jiefenn8.rdfweaver'
+description = 'RDFWeaver console - multi-media to semantic graph mapping application.'
+archivesBaseName = 'rdfweaver-console'
+
+version '0.1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+sourceSets {
+    integrationTest {
+        java{
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+            srcDir file('src/integration-test/java')
+        }
+        resources.srcDir file('src/integration-test/resources')
+    }
+}
+
+task integrationTest(type: Test){
+    description = 'Runs integration tests.'
+    group = 'verification'
+
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+task integTestReport(type :JacocoReport){
+    sourceSets sourceSets.main
+    executionData integrationTest
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
+
+configurations {
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestRuntimeOnly.extendsFrom runtimeOnly
+}
+
+idea {
+    module {
+        testSourceDirs += project.sourceSets.integrationTest.java.srcDirs
+        testSourceDirs += project.sourceSets.integrationTest.resources.srcDirs
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
+
+check.dependsOn jacocoTestReport
+integrationTest.finalizedBy integTestReport
+
+publishing {
+    publications {
+        GraphLoom(MavenPublication) {
+            from components.java
+            groupId = project.group
+            artifactId = project.archivesBaseName
+            version = project.version
+        }
+    }
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_API_KEY')
+    pkg {
+        repo = 'rdfweaver'
+        name = project.name
+        userOrg = 'jiefenn8'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/jiefenn8/rdfweaver.git'
+
+        version {
+            name = project.version
+            desc = project.description
+            released = new Date()
+            vcsTag = 'v' + project.version
+        }
+    }
+
+    publications = ['RDFWeaver']
+}
