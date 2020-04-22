@@ -18,6 +18,9 @@ targetCompatibility = 1.8
 repositories {
     mavenCentral()
     jcenter()
+    maven {
+        url  "https://dl.bintray.com/jiefenn8/graphloom"
+    }
 }
 
 sourceSets {
@@ -61,7 +64,19 @@ idea {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    //Test
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'org.hamcrest', name: 'java-hamcrest', version: '2.0.0.0'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.11.0'
+    testImplementation group: 'pl.pragmatists', name: 'JUnitParams', version: '1.1.1'
+
+    //Core
+    implementation group: 'info.picocli', name: 'picocli', version: '4.2.0'
+    implementation group: 'com.github.jiefenn8.graphloom', name: 'graphloom-core', version: '0.4.2'
+    implementation group: 'com.google.guava', name: 'guava', version: '29.0-jre'
+
+    //Annotation Processor
+    annotationProcessor group: 'info.picocli', name: 'picocli-codegen', version: '4.2.0'
 }
 
 jacocoTestReport {
