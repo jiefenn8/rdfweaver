@@ -1,6 +1,8 @@
+package com.github.jiefenn8.rdfweaver;
+
 import com.github.jiefenn8.graphloom.rdf.parser.R2RMLBuilder;
 import com.github.jiefenn8.graphloom.rdf.r2rml.R2RMLMap;
-import options.R2RMLOption;
+import com.github.jiefenn8.rdfweaver.options.R2RMLOption;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.ParseResult;
@@ -30,5 +32,4 @@ public class App implements Runnable {
             }
         }
     }
-
 }

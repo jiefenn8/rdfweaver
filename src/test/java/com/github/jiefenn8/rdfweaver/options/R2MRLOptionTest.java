@@ -1,4 +1,4 @@
-package options;
+package com.github.jiefenn8.rdfweaver.options;
 
 import com.github.jiefenn8.graphloom.api.EntityMap;
 import com.github.jiefenn8.graphloom.rdf.parser.R2RMLBuilder;

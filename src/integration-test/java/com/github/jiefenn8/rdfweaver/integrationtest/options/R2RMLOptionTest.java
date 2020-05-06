@@ -1,18 +1,16 @@
-package options;
+package com.github.jiefenn8.rdfweaver.integrationtest.options;
 
 import com.github.jiefenn8.graphloom.rdf.parser.R2RMLBuilder;
 import com.github.jiefenn8.graphloom.rdf.r2rml.R2RMLMap;
+import com.github.jiefenn8.rdfweaver.options.R2RMLOption;
 import com.google.common.collect.ImmutableList;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import picocli.CommandLine;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -44,7 +42,6 @@ public class R2RMLOptionTest {
     @Test
     @Parameters(method = "invalidR2RMLPathParameters")
     public void GivenInvalidR2RMLFile_WhenGetR2RMLMap_ThenReturnNull(String value) {
-        //String path = getClass().getResource(value).getPath();
         String args = String.format("--file=%s", value);
 
         commandLine.execute(args);
