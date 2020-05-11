@@ -41,7 +41,7 @@ public class R2RMLOptionTest {
 
     @Test
     @Parameters(method = "invalidR2RMLPathParameters")
-    public void GivenInvalidR2RMLFile_WhenGetR2RMLMap_ThenReturnNull(String value) {
+    public void GivenInvalidR2RMLFile_WhenExecute_ThenReturnNull(String value) {
         String args = String.format("--file=%s", value);
 
         commandLine.execute(args);
@@ -52,7 +52,7 @@ public class R2RMLOptionTest {
 
     @Test
     @Parameters(method = "validR2RMLPathParameters")
-    public void GivenValidR2RMLFile_WhenGetR2RMLMap_ThenReturnValidR2RMLMap(String value) {
+    public void GivenValidR2RMLFile_WhenExecute_ThenReturnR2RMLMap(String value) {
         String path = getClass().getResource(value).getPath();
         String args = String.format("--file=%s", path);
 

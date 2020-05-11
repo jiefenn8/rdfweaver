@@ -75,10 +75,17 @@ public class R2MRLOptionTest {
     }
 
     @Test
-    @Parameters(method = "invalidFilePathParameters")
-    public void GivenInvalidR2RMLPath_WhenExecute_ThenReturnErrorCode_14(File value) {
-        String args = String.format("--file=%s", value.getPath());
+    public void GivenInvalidOption_WhenExecute_ThenReturnCode_12(){
+        String args = "--notaoption=foo";
+        int result = commandLine.execute(args);
 
+        assertThat(result, is(12));
+    }
+
+    @Test
+    @Parameters(method = "invalidFilePathParameters")
+    public void GivenInvalidR2RMLPath_WhenExecute_ThenReturnCode_14(File value) {
+        String args = String.format("--file=%s", value.getPath());
         int result = commandLine.execute(args);
 
         assertThat(result, is(14));
@@ -86,9 +93,9 @@ public class R2MRLOptionTest {
 
     @Test
     @Parameters(method = "invalidFilePathParameters")
-    public void GivenInvalidR2RMLPath_WhenExecute_ThenPrintErrorMessage(File value) {
+    public void GivenInvalidR2RMLPath_WhenExecute_ThenPrintErrMessage(File value) {
         String args = String.format("--file=%s", value.getPath());
-        String expectedMessage = String.format("R2RML file: '%s' is not valid filename or path.%s", value, EOL);
+        String expectedMessage = String.format("R2RML file '%s' is not valid filename or path.%s", value, EOL);
 
         commandLine.execute(args);
         String result = err.toString();
@@ -98,7 +105,7 @@ public class R2MRLOptionTest {
 
     @Test
     @Parameters(method = "invalidFilePathParameters")
-    public void GivenInvalidR2RMLPath_WhenExecute_ThenReturnNullResult(File value) {
+    public void GivenInvalidR2RMLPath_WhenExecute_ThenReturnNull(File value) {
         String args = String.format("--file=%s", value.getPath());
 
         commandLine.execute(args);
@@ -108,7 +115,7 @@ public class R2MRLOptionTest {
     }
 
     @Test
-    public void GivenValidR2RMLFile_WhenExecute_ThenReturnSuccessCode_0() {
+    public void GivenValidR2RMLFile_WhenExecute_ThenReturnCode_0() {
         when(mockBuilder.parse(anyString())).thenReturn(mockMap);
         String value = String.format("--file=%s", r2rmlFile);
 
@@ -118,7 +125,7 @@ public class R2MRLOptionTest {
     }
 
     @Test
-    public void GivenValidR2RMLFile_WhenExecute_ThenReturnR2RMLResult() {
+    public void GivenValidR2RMLFile_WhenExecute_ThenReturnR2RMLMap() {
         when(mockBuilder.parse(anyString())).thenReturn(mockMap);
         when(mockMap.getEntityMaps()).thenReturn(ImmutableSet.of(mock(EntityMap.class)));
         String value = String.format("--file=%s", r2rmlFile);
@@ -131,7 +138,7 @@ public class R2MRLOptionTest {
     }
 
     @Test
-    public void GivenInvalidR2RMLData_WhenExecute_ThenReturnErrorCode_14() {
+    public void GivenInvalidR2RMLData_WhenExecute_ThenReturnCode_14() {
         when(mockBuilder.parse(anyString())).thenThrow(TurtleParseException.class);
         String value = String.format("--file=%s", r2rmlFile);
 
@@ -141,7 +148,7 @@ public class R2MRLOptionTest {
     }
 
     @Test
-    public void GivenInvalidR2RMLData_WhenExecute_ThenReturnNullResult() {
+    public void GivenInvalidR2RMLData_WhenExecute_ThenReturnNull() {
         when(mockBuilder.parse(anyString())).thenThrow(TurtleParseException.class);
         String value = String.format("--file=%s", r2rmlFile);
 
@@ -152,10 +159,10 @@ public class R2MRLOptionTest {
     }
 
     @Test
-    public void GivenInvalidR2RMLData_WhenExecute_ThenPrintErrorMessage() {
+    public void GivenInvalidR2RMLData_WhenExecute_ThenPrintErrMessage() {
         when(mockBuilder.parse(anyString())).thenThrow(TurtleParseException.class);
         String value = String.format("--file=%s", r2rmlFile);
-        String expected = String.format("R2RML file: '%s' does not contain a valid R2RML map.%s", r2rmlFile, EOL);
+        String expected = String.format("R2RML file '%s' does not contain a valid R2RML map.%s", r2rmlFile, EOL);
 
         commandLine.execute(value);
         String result = err.toString();

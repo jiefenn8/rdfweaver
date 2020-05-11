@@ -40,12 +40,12 @@ public class R2RMLOption implements Callable<R2RMLMap> {
 
             return builder.parse(r2rmlFile.getPath());
         } catch (NotFoundException e) {
-            String message = String.format("R2RML file: '%s' is not valid filename or path.", path);
+            String message = String.format("R2RML file '%s' is not valid filename or path.", path);
             cmd.getErr().println(message);
             throw new ExecutionException(cmd, message, e);
 
         } catch (TurtleParseException e) {
-            String message = String.format("R2RML file: '%s' does not contain a valid R2RML map.", path);
+            String message = String.format("R2RML file '%s' does not contain a valid R2RML map.", path);
             cmd.getErr().println(message);
             throw new ExecutionException(cmd, message, e);
         }
