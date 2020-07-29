@@ -75,6 +75,12 @@ dependencies {
     implementation group: 'com.github.jiefenn8.graphloom', name: 'graphloom-core', version: '0.4.2'
     implementation group: 'com.google.guava', name: 'guava', version: '29.0-jre'
 
+    //Network
+    implementation group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '6.2.2.jre8'
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.20'
+    implementation group: 'com.zaxxer', name: 'HikariCP', version: '3.2.0'
+    implementation group: 'com.oracle.database.jdbc', name: 'ojdbc8', version: '19.3.0.0'
+
     //Annotation Processor
     annotationProcessor group: 'info.picocli', name: 'picocli-codegen', version: '4.2.0'
 }

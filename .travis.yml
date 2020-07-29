@@ -2,11 +2,18 @@ dist: trusty
 language: java
 jdk: oraclejdk8
 
+sudo: required
+
+services:
+ - docker
+
 before_install:
  - chmod +x gradlew
  
 after_success:
  - bash <(curl -s https://codecov.io/bash) -c -F unittests
+ - docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=SomeSuperElite@Passw0rd' -p 1433:1433 --name sqlserver2019 -d mcr.microsoft.com/mssql/server:2019-latest 
+ - docker start sqlserver2019
  - ./gradlew integrationTest && bash <(curl -s https://codecov.io/bash) -c -F integration 
  
 deploy:
@@ -15,6 +22,5 @@ deploy:
   skip_cleanup: true 
   script: ./gradlew bintrayUpload 
   on: 
-    tags: true 
+    tags: true
     branch: master
-    
