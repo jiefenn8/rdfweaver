@@ -19,7 +19,8 @@ public class App implements Runnable {
     private R2RMLBuilder builder;
     private R2RMLMap r2rmlMap;
 
-    public static void main(String... args) {
+    public static int main(String... args) {
+        return 0;
     }
 
     @Override

@@ -1,10 +1,8 @@
 package com.github.jiefenn8.rdfweaver.integrationtest.options;
 
 import com.github.jiefenn8.graphloom.api.InputSource;
-import com.github.jiefenn8.rdfweaver.network.DataSourceFactory;
 import com.github.jiefenn8.rdfweaver.network.JDBCDriver;
 import com.github.jiefenn8.rdfweaver.options.ServerOption;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -19,8 +17,6 @@ import picocli.CommandLine;
 import javax.sql.DataSource;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.net.InetAddress;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -158,7 +154,7 @@ public class ServerOptionTest {
         config.setProperty("dataSource.serverName", TEST_HOST);
         config.setProperty("dataSource.portNumber", TEST_PORT);
         config.setProperty("dataSource.user", TEST_USER);
-        config.setProperty("dataSource.password",TEST_PASS);
+        config.setProperty("dataSource.password", TEST_PASS);
         HikariConfig serverConfig = new HikariConfig(config);
         serverConfig.setMaximumPoolSize(5);
         serverConfig.setConnectionTimeout(10000);
