@@ -9,9 +9,10 @@ services:
 
 before_install:
  - chmod +x gradlew
+ - chmod +x script/docker_mssql_setup_script.sh
  
 install:
- - docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=SomeSuperElite@Passw0rd' -p 1433:1433 --name sqlserver2019 -d mcr.microsoft.com/mssql/server:2019-latest
+ - ./script/docker_mssql_setup_script.sh
  - ./gradlew assemble
 
 script:
