@@ -70,6 +70,7 @@ fabric.properties
 
 #Log
 log/
+logs/
 
 # Ignore Gradle GUI config
 gradle-app.setting
