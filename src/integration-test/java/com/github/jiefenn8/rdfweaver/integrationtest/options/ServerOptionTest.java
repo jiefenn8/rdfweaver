@@ -40,6 +40,7 @@ public class ServerOptionTest {
     private static final String PORT_OPTION = "--port";
     private static final String USER_OPTION = "--user";
     private static final String PASS_OPTION = "--pass";
+    private static final String DATABASE_OPTION = "--database";
 
     /**
      * The values of the mock database connection that the test much match to be
@@ -49,14 +50,12 @@ public class ServerOptionTest {
     private static final String TEST_HOST = "localhost";
     private static final String TEST_PORT = "1433";
     private static final String TEST_USER = "sa";
-    private static final String TEST_PASS = "SomeSuperElite@Passw0rd";
+    private static final String TEST_PASS = "YourStrong@Passw0rd";
 
     /**
-     * The immutable list of required options to run this command. This test class
-     * will use this list to create an array with arguments that will be executed on the
-     * command line.
+     * List of required options needed to run this command.
      * <p>
-     * Note: When adding new options, ensure that any test parameter methods with
+     * Note: When adding new options, ensure that any test values aligns parameter methods with
      * related test values are updated and aligned in the exact order of this list.
      * Any extra value not matching the size of this list will be ignored.
      */

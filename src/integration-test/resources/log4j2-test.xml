@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="warn" name="RDFWeaver" packages="org.apache.logging.log4j.test">
+<Configuration status="trace" name="RDFWeaver" packages="org.apache.logging.log4j.test">
     <Properties>
         <Property name="log-path">logs/</Property>
-        <Property name="filename">app</Property>
+        <Property name="app-filename">app</Property>
+        <Property name="debug-filename">debug</Property>
         <Property name="file-pattern">%d{yyyy-MM-dd-HH}_%i</Property>
     </Properties>
 
@@ -11,8 +12,18 @@
             <PatternLayout pattern="%d{HH:mm:ss,SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
         <RollingFile
-                name="AppFile" fileName="${log-path}${filename}.log"
+                name="AppFile" fileName="${log-path}${app-filename}.log"
                 filePattern="${log-path}${file-name}-${file-pattern}.log.gz" append="false">
+            <PatternLayout pattern="%d{HH:mm:ss,SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <OnStartupTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="250 MB"/>
+            </Policies>
+            <DefaultRollOverStrategy max="20"/>
+        </RollingFile>
+        <RollingFile name="DebugFile" fileName="${log-path}${debug-filename}.log"
+                     filePattern="${log-path}${debug-filename}-${file-pattern}.log.gz" append="false">
             <PatternLayout pattern="%d{HH:mm:ss,SSS} [%t] %-5level %logger{36} - %msg%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
@@ -24,8 +35,9 @@
     </Appenders>
     <Loggers>
         <Root level="trace">
-            <AppenderRef ref="Console" level="warn"/>
+            <AppenderRef ref="Console" level="trace"/>
             <AppenderRef ref="AppFile" level="warn"/>
+            <AppenderRef ref="DebugFile" level="trace"/>
         </Root>
     </Loggers>
 </Configuration>

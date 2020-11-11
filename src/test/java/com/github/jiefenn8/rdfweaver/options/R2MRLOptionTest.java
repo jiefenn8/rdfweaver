@@ -75,7 +75,7 @@ public class R2MRLOptionTest {
     }
 
     @Test
-    public void GivenInvalidOption_WhenExecute_ThenReturnCode_12(){
+    public void GivenInvalidOption_WhenExecute_ThenReturnCode_12() {
         String args = "--notaoption=foo";
         int result = commandLine.execute(args);
 

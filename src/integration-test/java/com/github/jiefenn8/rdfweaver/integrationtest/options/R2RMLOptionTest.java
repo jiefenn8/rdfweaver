@@ -31,11 +31,11 @@ public class R2RMLOptionTest {
         commandLine = new CommandLine(r2rmlOption);
     }
 
-    public List<String> invalidR2RMLPathParameters(){
+    public List<String> invalidR2RMLPathParameters() {
         return ImmutableList.of("", "mock_r2rml.ttl", "/invalid_path/mock_r2rml.ttl");
     }
 
-    public List<String> validR2RMLPathParameters(){
+    public List<String> validR2RMLPathParameters() {
         return ImmutableList.of("/r2rml/empty_r2rml.ttl", "/r2rml/valid_r2rml.ttl");
     }
 

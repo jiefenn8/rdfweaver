@@ -3,6 +3,8 @@ package com.github.jiefenn8.rdfweaver.options;
 import com.github.jiefenn8.rdfweaver.network.JDBCDriver;
 import com.github.jiefenn8.rdfweaver.network.RelationalSource;
 import com.zaxxer.hikari.pool.HikariPool;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ExecutionException;
@@ -22,14 +24,18 @@ import java.util.concurrent.Callable;
 @Command(name = "server",
         exitCodeOnInvalidInput = 22,
         exitCodeOnExecutionException = 24,
+        subcommands = {R2RMLOption.class},
         description = "Connect to a relational database to retrieve data to map.")
 public class ServerOption implements Callable<RelationalSource> {
 
+    private static final Logger LOGGER = LogManager.getLogger(ServerOption.class);
     private final RelationalSource.Builder rdbSourceBuilder;
     @Option(names = {"-d", "--driver"}, required = true, description = "Database driver")
     private JDBCDriver driver;
     @Option(names = {"-h", "--host"}, required = true, description = "Database URL")
     private InetAddress host;
+    @Option(names = {"-db", "--database"}, defaultValue = "", description = "Database to use (if multiple in host)")
+    private String database;
     @Option(names = {"-t", "--port"}, required = true, description = "Database port")
     private int port;
     @Option(names = {"-u", "--user"}, required = true, description = "Database login")
@@ -42,7 +48,7 @@ public class ServerOption implements Callable<RelationalSource> {
      * Constructs a {@code ServerOption} instance with default
      * {@link RelationalSource} builder.
      */
-    public ServerOption(){
+    public ServerOption() {
         rdbSourceBuilder = new RelationalSource.Builder();
     }
 
@@ -52,7 +58,7 @@ public class ServerOption implements Callable<RelationalSource> {
      *
      * @param rdbSourceBuilder the builder to build {@code RelationalSource}
      */
-    protected ServerOption(RelationalSource.Builder rdbSourceBuilder){
+    protected ServerOption(RelationalSource.Builder rdbSourceBuilder) {
         this.rdbSourceBuilder = rdbSourceBuilder;
     }
 
@@ -64,6 +70,7 @@ public class ServerOption implements Callable<RelationalSource> {
             return rdbSourceBuilder.newInstance()
                     .serverHost(driver, host, port)
                     .credential(user, pass)
+                    .database(database)
                     .build();
         } catch (HikariPool.PoolInitializationException ex) {
             String msg = "Server exception occurred during connection attempt.";
@@ -75,7 +82,7 @@ public class ServerOption implements Callable<RelationalSource> {
             cmd.getOut().println(msg);
             throw new ExecutionException(cmd, msg, ex);
         } catch (Exception ex) {
-            String msg = "Unhandled exception occurred during runtime. Aborting.";
+            String msg = "Unhandled exception occurred during server command execution. Aborting.";
             cmd.getOut().println(msg);
             throw new ExecutionException(cmd, msg, ex);
         } finally {

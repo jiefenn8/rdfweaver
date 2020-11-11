@@ -28,7 +28,6 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -57,7 +56,7 @@ public class ServerOptionTest {
     private static final String TEST_HOST = "localhost";
     private static final String TEST_PORT = "1433";
     private static final String TEST_USER = "sa";
-    private static final String TEST_PASS = "SomeSuperElite@Passw0rd";
+    private static final String TEST_PASS = "YourStrong@Passw0rd";
 
     /**
      * The Database properties id strings.
@@ -102,6 +101,7 @@ public class ServerOptionTest {
     private final PrintStream consoleErr = System.err;
     private final ByteArrayOutputStream out = new ByteArrayOutputStream();
     private final ByteArrayOutputStream err = new ByteArrayOutputStream();
+    private final Throwable stubException = new Throwable();
     @Mock private RelationalSource mockRelationalSource;
     @Mock(answer = Answers.RETURNS_DEEP_STUBS) private RelationalSource.Builder mockRelationalSourceBuilder;
     private CommandLine commandLine;
@@ -165,6 +165,7 @@ public class ServerOptionTest {
         when(mockRelationalSourceBuilder.newInstance()
                 .serverHost(any(JDBCDriver.class), any(InetAddress.class), anyInt())
                 .credential(anyString(), any(char[].class))
+                .database(any())
                 .build()
         ).thenAnswer((i) -> {
             Properties config = new Properties();
@@ -174,7 +175,7 @@ public class ServerOptionTest {
             config.setProperty(USER_PROP, params.get(3));
             config.setProperty(PASS_PROP, params.get(4));
             if (!config.equals(expectedConfig)) {
-                throw new HikariPool.PoolInitializationException(mock(Throwable.class));
+                throw new HikariPool.PoolInitializationException(stubException);
             }
             return mockRelationalSource;
         });
@@ -194,6 +195,7 @@ public class ServerOptionTest {
         when(mockRelationalSourceBuilder.newInstance()
                 .serverHost(any(JDBCDriver.class), any(InetAddress.class), anyInt())
                 .credential(anyString(), any(char[].class))
+                .database(any())
                 .build()
         ).thenThrow(exception);
 
@@ -213,6 +215,7 @@ public class ServerOptionTest {
         when(mockRelationalSourceBuilder.newInstance()
                 .serverHost(any(JDBCDriver.class), any(InetAddress.class), anyInt())
                 .credential(anyString(), any(char[].class))
+                .database(any())
                 .build()
         ).thenThrow(exception);
 
@@ -231,6 +234,7 @@ public class ServerOptionTest {
         when(mockRelationalSourceBuilder.newInstance()
                 .serverHost(any(JDBCDriver.class), any(InetAddress.class), anyInt())
                 .credential(anyString(), any(char[].class))
+                .database(any())
                 .build()
         ).thenAnswer((i) -> {
             int value = Integer.parseInt(port);
@@ -255,6 +259,7 @@ public class ServerOptionTest {
         when(mockRelationalSourceBuilder.newInstance()
                 .serverHost(any(JDBCDriver.class), any(InetAddress.class), anyInt())
                 .credential(anyString(), any(char[].class))
+                .database(any())
                 .build()
         ).thenThrow(exception);
 
@@ -273,6 +278,7 @@ public class ServerOptionTest {
         when(mockRelationalSourceBuilder.newInstance()
                 .serverHost(any(JDBCDriver.class), any(InetAddress.class), anyInt())
                 .credential(anyString(), any(char[].class))
+                .database(any())
                 .build()
         ).thenThrow(exception);
 
@@ -290,6 +296,7 @@ public class ServerOptionTest {
         when(mockRelationalSourceBuilder.newInstance()
                 .serverHost(any(JDBCDriver.class), any(InetAddress.class), anyInt())
                 .credential(anyString(), any(char[].class))
+                .database(any())
                 .build()
         ).thenThrow(exception);
 
@@ -302,10 +309,11 @@ public class ServerOptionTest {
     public void GivenUnhandledRuntimeLError_WhenExecute_ThenPrintErrorMessage() {
         List<String> parameters = ImmutableList.of(TEST_DRIVER, TEST_HOST, TEST_PORT, TEST_USER, TEST_PASS);
         String[] args = createExecutableArguments(parameters);
-        String expected = "Unhandled exception occurred during runtime. Aborting." + EOL;
+        String expected = "Unhandled exception occurred during server command execution. Aborting." + EOL;
         when(mockRelationalSourceBuilder.newInstance()
                 .serverHost(any(JDBCDriver.class), any(InetAddress.class), anyInt())
                 .credential(anyString(), any(char[].class))
+                .database(any())
                 .build()
         ).thenThrow(RuntimeException.class);
 
@@ -321,6 +329,7 @@ public class ServerOptionTest {
         when(mockRelationalSourceBuilder.newInstance()
                 .serverHost(any(JDBCDriver.class), any(InetAddress.class), anyInt())
                 .credential(anyString(), any(char[].class))
+                .database(any())
                 .build()
         ).thenAnswer((i) -> {
             Properties config = new Properties();
@@ -330,7 +339,7 @@ public class ServerOptionTest {
             config.setProperty(USER_PROP, params.get(3));
             config.setProperty(PASS_PROP, params.get(4));
             if (!config.equals(expectedConfig)) {
-                throw new HikariPool.PoolInitializationException(mock(Throwable.class));
+                throw new HikariPool.PoolInitializationException(stubException);
             }
             return mockRelationalSource;
         });
@@ -353,6 +362,7 @@ public class ServerOptionTest {
         when(mockRelationalSourceBuilder.newInstance()
                 .serverHost(any(JDBCDriver.class), any(InetAddress.class), anyInt())
                 .credential(anyString(), any(char[].class))
+                .database(any())
                 .build()
         ).thenAnswer((i) -> {
             Properties config = new Properties();
@@ -362,7 +372,7 @@ public class ServerOptionTest {
             config.setProperty(USER_PROP, params.get(3));
             config.setProperty(PASS_PROP, params.get(4));
             if (!config.equals(expectedConfig)) {
-                throw new HikariPool.PoolInitializationException(mock(Throwable.class));
+                throw new HikariPool.PoolInitializationException(stubException);
             }
             return mockRelationalSource;
         });
@@ -378,6 +388,7 @@ public class ServerOptionTest {
         when(mockRelationalSourceBuilder.newInstance()
                 .serverHost(any(JDBCDriver.class), any(InetAddress.class), anyInt())
                 .credential(anyString(), any(char[].class))
+                .database(any())
                 .build()
         ).thenAnswer((i) -> {
             Properties config = new Properties();
@@ -387,7 +398,7 @@ public class ServerOptionTest {
             config.setProperty(USER_PROP, params.get(3));
             config.setProperty(PASS_PROP, params.get(4));
             if (!config.equals(expectedConfig)) {
-                throw new HikariPool.PoolInitializationException(mock(Throwable.class));
+                throw new HikariPool.PoolInitializationException(stubException);
             }
             return mockRelationalSource;
         });
