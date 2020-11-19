@@ -16,7 +16,13 @@ public enum RDFFileFormat {
     /**
      * List of all supported  RDF file format below.
      */
-    NTRIPLES(RDFFormat.NT);
+    TURTLE(RDFFormat.TURTLE),
+    NTRIPLES(RDFFormat.NT),
+    NQUADS(RDFFormat.NQUADS),
+    TRIG(RDFFormat.TRIG),
+    JSONLD(RDFFormat.JSONLD),
+    RDFXML(RDFFormat.RDFXML),
+    RDFJSON(RDFFormat.RDFJSON);
 
     private final RDFFormat format;
 

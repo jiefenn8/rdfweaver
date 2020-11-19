@@ -1,12 +1,17 @@
 package com.github.jiefenn8.rdfweaver.output;
 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.apache.jena.riot.RDFFormat;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.MockitoRule;
 import picocli.CommandLine;
 
 import java.io.ByteArrayOutputStream;
@@ -14,6 +19,8 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -24,7 +31,7 @@ import static org.mockito.Mockito.when;
 /**
  * Unit test class for {@code OutputOption}.
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(JUnitParamsRunner.class)
 public class OutputOptionTest {
 
     private static final String EOL = System.getProperty("line.separator");
@@ -35,8 +42,8 @@ public class OutputOptionTest {
     private final PrintStream consoleErr = System.err;
     private final ByteArrayOutputStream out = new ByteArrayOutputStream();
     private final ByteArrayOutputStream err = new ByteArrayOutputStream();
-    @Mock
-    private RDFFileFactory mockRDFFileFactory;
+    @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Mock private RDFFileFactory mockRDFFileFactory;
     private CommandLine commandLine;
     private Path testDir;
 
@@ -107,18 +114,22 @@ public class OutputOptionTest {
         assertThat(result.getParent(), is(equalTo(testDirectory.toString())));
     }
 
+    public List<String> validFormatParameters(){
+        return Arrays.asList("TURTLE", "NTRIPLES", "NQUADS", "TRIG", "JSONLD", "RDFXML", "RDFJSON");
+    }
+
     @Test
-    public void GivenRDFFormatParam_WhenExecute_ThenReturnRDFFileWithExpectedFormat() {
-        String format = "NTRIPLES";
-        RDFFormat expectedFormat = RDFFileFormat.valueOf(format).getFormat();
-        String[] args = new String[]{"--format" + DELIMITER + format};
+    @Parameters(method = "validFormatParameters")
+    public void GivenRDFFormatParam_WhenExecute_ThenReturnRDFFileWithExpectedFormat(String value) {
+        String[] args = new String[]{"--format" + DELIMITER + value};
         RDFFile mockRDFFile = mock(RDFFile.class);
+        RDFFormat expected = RDFFileFormat.valueOf(value).getFormat();
         when(mockRDFFileFactory.createFile(any(Path.class), any(RDFFormat.class))).thenReturn(mockRDFFile);
-        when(mockRDFFile.getFormat()).thenReturn(expectedFormat);
+        when(mockRDFFile.getFormat()).thenReturn(expected);
 
         commandLine.execute(args);
         RDFFile result = commandLine.getExecutionResult();
-        assertThat(result.getFormat(), is(equalTo(expectedFormat)));
+        assertThat(result.getFormat(), is(equalTo(expected)));
     }
 
     @Test
