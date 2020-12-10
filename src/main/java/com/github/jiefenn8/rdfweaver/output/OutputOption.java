@@ -16,37 +16,37 @@ import java.util.concurrent.Callable;
 
 /**
  * This class handles the user input of output related commands and parameters
- * to prepare all the necessary directory and file to output RDF results.
+ * to prepare all the necessary directory and system to output RDF results.
  */
 @Command(name = "output",
         exitCodeOnInvalidInput = 32,
         exitCodeOnExecutionException = 34,
         description = "Output of mapped RDF result.")
-public class OutputOption implements Callable<RDFFile> {
+public class OutputOption implements Callable<RDFFileSystem> {
 
     private static final Logger LOGGER = LogManager.getLogger(OutputOption.class);
-    private final RDFFileFactory factory;
+    private final RDFFileSystemFactory fsFactory;
     @ArgGroup
     private final FileSystem fileSystem = new FileSystem();
     @Spec
     private CommandSpec spec;
 
     public OutputOption() {
-        this.factory = new RDFFileFactory();
+        this.fsFactory = new RDFFileSystemFactory();
     }
 
-    public OutputOption(@NonNull RDFFileFactory factory) {
-        this.factory = factory;
+    public OutputOption(@NonNull RDFFileSystemFactory fsFactory) {
+        this.fsFactory = fsFactory;
     }
 
     @Override
-    public RDFFile call() {
+    public RDFFileSystem call() {
         CommandLine cmd = spec.commandLine();
         cmd.setCaseInsensitiveEnumValuesAllowed(false);
         try {
             Path directoryPath = fileSystem.path.toPath();
             Path filePath = FileResolver.resolveFilename(directoryPath, fileSystem.filename);
-            RDFFile file = factory.createFile(filePath, fileSystem.format.getFormat());
+            RDFFileSystem file = fsFactory.createFile(filePath, fileSystem.format.getFormat());
             FileResolver.prepareDir(directoryPath);
             return file;
         } catch (IOException ex) {
@@ -86,7 +86,7 @@ public class OutputOption implements Callable<RDFFile> {
         private InetAddress host;
         @Option(names = {"-p", "--port"}, required = true, description = PORT_DESC)
         private int port;
-        @Option(names = {"-b", "--baseName"}, description = BASE_DESC)
+        @Option(names = {"-b", "--baseName"}, required = true, description = BASE_DESC)
         private String baseName;
         @Option(names = {"-g", "--graphName"}, description = GRAPH_DESC)
         private String graphName;

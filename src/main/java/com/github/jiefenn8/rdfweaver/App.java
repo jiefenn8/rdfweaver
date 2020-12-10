@@ -4,9 +4,7 @@ import com.github.jiefenn8.graphloom.api.ConfigMaps;
 import com.github.jiefenn8.graphloom.api.InputSource;
 import com.github.jiefenn8.graphloom.rdf.RDFMapper;
 import com.github.jiefenn8.rdfweaver.options.ServerOption;
-import com.github.jiefenn8.rdfweaver.output.RDFFile;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.riot.RDFDataMgr;
+import com.github.jiefenn8.rdfweaver.output.RDFFileSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -14,7 +12,6 @@ import picocli.CommandLine;
 import picocli.CommandLine.*;
 import picocli.CommandLine.Model.CommandSpec;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +30,7 @@ public class App implements Runnable {
     private CommandLine cmd;
     private InputSource inputSource;
     private ConfigMaps configMaps;
-    private RDFFile rdfFile;
+    private RDFFileSystem rdfFileSystem;
 
     /**
      * Constructs an App instance with default {@link RDFMapper}.
@@ -78,7 +75,7 @@ public class App implements Runnable {
         }
     }
 
-    protected int start(@NonNull CommandLine cmd, @NonNull String... args){
+    protected int start(@NonNull CommandLine cmd, @NonNull String... args) {
         cmd.addSubcommand(serverOption);
         cmd.setExecutionStrategy(new RunAll());
         return processResults(cmd.execute(args));
@@ -90,7 +87,7 @@ public class App implements Runnable {
      *
      * @return true if required commands is given, otherwise false
      */
-    private boolean hasRequiredCommands(){
+    private boolean hasRequiredCommands() {
         List<String> commands = cmd.getParseResult().originalArgs();
         List<String> required = Arrays.asList("server", "r2rml", "output");
         return commands.containsAll(required);
@@ -106,20 +103,20 @@ public class App implements Runnable {
      * @return the execution code of the result processing
      */
     private int processResults(int code) {
-        if(code != 0 ){
+        if (code != 0) {
             return code;
         }
 
         cmd.getOut().println("Starting RDF mapping process.");
-        collectAllSubResults(cmd).forEach((obj) -> { if (obj instanceof InputSource) inputSource = ((InputSource) obj);
+        collectAllSubResults(cmd).forEach((obj) -> {
+            if (obj instanceof InputSource) inputSource = ((InputSource) obj);
             if (obj instanceof ConfigMaps) configMaps = ((ConfigMaps) obj);
-            if (obj instanceof RDFFile) rdfFile = ((RDFFile) obj);
+            if (obj instanceof RDFFileSystem) rdfFileSystem = ((RDFFileSystem) obj);
         });
 
-        try (FileOutputStream fos = new FileOutputStream(rdfFile)) {
-            Model result = rdfMapper.mapToGraph(inputSource, configMaps);
-            RDFDataMgr.write(fos, result, rdfFile.getFormat());
-            cmd.getOut().println("RDF mapping complete. Output: " + rdfFile);
+        try {
+            rdfFileSystem.save(rdfMapper.mapToGraph(inputSource, configMaps));
+            cmd.getOut().println("RDF mapping complete. Output: " + rdfFileSystem);
         } catch (IOException ex) {
             ex.printStackTrace(cmd.getErr());
         }

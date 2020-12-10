@@ -16,7 +16,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * Integration test class for {@code App}.
  */
 public class AppTest {
-    
+
     private Path expectedOutput;
 
     @Before

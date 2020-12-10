@@ -1,8 +1,8 @@
 package com.github.jiefenn8.rdfweaver.integrationtest.options;
 
 import com.github.jiefenn8.rdfweaver.output.OutputOption;
-import com.github.jiefenn8.rdfweaver.output.RDFFile;
 import com.github.jiefenn8.rdfweaver.output.RDFFileFormat;
+import com.github.jiefenn8.rdfweaver.output.RDFFileSystem;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.apache.jena.riot.RDFFormat;
@@ -38,7 +38,7 @@ public class OutputOptionTest {
     @Test
     public void GivenNoParams_WhenExecute_ThenReturnDefaultRDFFile() {
         commandLine.execute();
-        RDFFile result = commandLine.getExecutionResult();
+        RDFFileSystem result = commandLine.getExecutionResult();
         assertThat(result, is(notNullValue()));
     }
 
@@ -48,12 +48,12 @@ public class OutputOptionTest {
         String[] args = new String[]{"--dir" + DELIMITER + testDirectory};
 
         commandLine.execute(args);
-        RDFFile file = commandLine.getExecutionResult();
+        RDFFileSystem file = commandLine.getExecutionResult();
         String result = file.getParent();
         assertThat(result, is(equalTo(testDirectory.toString())));
     }
 
-    public List<String> validFormatParameters(){
+    public List<String> validFormatParameters() {
         return Arrays.asList("TURTLE", "NTRIPLES", "NQUADS", "TRIG", "JSONLD", "RDFXML", "RDFJSON");
     }
 
@@ -63,7 +63,7 @@ public class OutputOptionTest {
         String[] args = new String[]{"--format" + DELIMITER + value};
 
         commandLine.execute(args);
-        RDFFile file = commandLine.getExecutionResult();
+        RDFFileSystem file = commandLine.getExecutionResult();
         RDFFormat result = file.getFormat();
         RDFFormat expected = RDFFileFormat.valueOf(value).getFormat();
         assertThat(result, is(equalTo(expected)));
@@ -75,7 +75,7 @@ public class OutputOptionTest {
         String[] args = new String[]{"--filename" + DELIMITER + filename};
 
         commandLine.execute(args);
-        RDFFile file = commandLine.getExecutionResult();
+        RDFFileSystem file = commandLine.getExecutionResult();
         String result = file.getName();
         assertThat(result, is(equalTo(filename)));
     }

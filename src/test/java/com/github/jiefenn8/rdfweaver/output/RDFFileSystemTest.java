@@ -19,29 +19,29 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * Unit test class for {@code RDFFile}.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class RDFFileTest {
+public class RDFFileSystemTest {
 
     private static final String OUTPUT_DIR = "rdfweaver-test-";
     @Mock
     private RDFFormat mockFormat;
     private Path testDir;
-    private RDFFile rdfFile;
+    private RDFFileSystem rdfFileSystem;
 
     @Before
     public void setUp() {
         testDir = Paths.get(OUTPUT_DIR);
-        rdfFile = new RDFFile(testDir, mockFormat);
+        rdfFileSystem = new RDFFileSystem(testDir, mockFormat);
     }
 
     @Test
     public void GivenPath_WhenGetInstanceAsFile_ThenReturnExpectedFile() {
-        File result = rdfFile.asFile();
+        File result = rdfFileSystem.asFile();
         assertThat(result.toPath(), is(equalTo(testDir)));
     }
 
     @Test
     public void GivenRDFFormat_WhenGetFormat_ThenReturnExpectedRDFFormat() {
-        RDFFormat result = rdfFile.getFormat();
+        RDFFormat result = rdfFileSystem.getFormat();
         assertThat(result, is(equalTo(mockFormat)));
     }
 }
