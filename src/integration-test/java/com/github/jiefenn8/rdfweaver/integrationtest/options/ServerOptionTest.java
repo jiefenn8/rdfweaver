@@ -47,7 +47,7 @@ public class ServerOptionTest {
      * considered a valid connection.
      */
     private static final String TEST_DRIVER = JDBCDriver.MSSQL.toString();
-    private static final String TEST_HOST = "localhost";
+    private static final String TEST_HOST = "127.0.0.1";
     private static final String TEST_PORT = "1433";
     private static final String TEST_USER = "sa";
     private static final String TEST_PASS = "YourStrong@Passw0rd";

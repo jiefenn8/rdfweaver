@@ -32,7 +32,7 @@ public class AppTest {
     @Test
     public void GivenRequiredParams_WhenExecute_ThenGenerateRDFFile() {
         String driver = "--driver=MSSQL";
-        String host = "--host=localhost";
+        String host = "--host=127.0.0.1";
         String port = "--port=1433";
         String database = "--database=testDb";
         String user = "--user=sa";
