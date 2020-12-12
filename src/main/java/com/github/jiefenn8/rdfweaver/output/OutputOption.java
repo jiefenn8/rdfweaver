@@ -10,7 +10,6 @@ import picocli.CommandLine.Model.CommandSpec;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
 
@@ -25,17 +24,17 @@ import java.util.concurrent.Callable;
 public class OutputOption implements Callable<RDFFileSystem> {
 
     private static final Logger LOGGER = LogManager.getLogger(OutputOption.class);
-    private final RDFFileSystemFactory fsFactory;
+    private final FileSystemFactory fsFactory;
     @ArgGroup
     private final FileSystem fileSystem = new FileSystem();
     @Spec
     private CommandSpec spec;
 
     public OutputOption() {
-        this.fsFactory = new RDFFileSystemFactory();
+        this.fsFactory = new FileSystemFactory();
     }
 
-    public OutputOption(@NonNull RDFFileSystemFactory fsFactory) {
+    public OutputOption(@NonNull FileSystemFactory fsFactory) {
         this.fsFactory = fsFactory;
     }
 
@@ -44,11 +43,7 @@ public class OutputOption implements Callable<RDFFileSystem> {
         CommandLine cmd = spec.commandLine();
         cmd.setCaseInsensitiveEnumValuesAllowed(false);
         try {
-            Path directoryPath = fileSystem.path.toPath();
-            Path filePath = FileResolver.resolveFilename(directoryPath, fileSystem.filename);
-            RDFFileSystem file = fsFactory.createFile(filePath, fileSystem.format.getFormat());
-            FileResolver.prepareDir(directoryPath);
-            return file;
+            return fsFactory.createFile(fileSystem.path.toPath(), fileSystem.filename, fileSystem.format.getFormat());
         } catch (IOException ex) {
             String msg = "I/O error: Failed to create directory path: " + fileSystem.path.toPath();
             cmd.getOut().println(msg);

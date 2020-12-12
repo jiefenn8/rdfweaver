@@ -24,6 +24,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -42,7 +43,7 @@ public class OutputOptionTest {
     private final ByteArrayOutputStream out = new ByteArrayOutputStream();
     private final ByteArrayOutputStream err = new ByteArrayOutputStream();
     @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
-    @Mock private RDFFileSystemFactory mockRDFFileSystemFactory;
+    @Mock private FileSystemFactory mockFileSystemFactory;
     private CommandLine commandLine;
     private Path testDir;
 
@@ -54,7 +55,7 @@ public class OutputOptionTest {
         System.setOut(new PrintStream(out));
 
         testDir = Files.createTempDirectory(OUTPUT_DIR);
-        OutputOption outputOption = new OutputOption(mockRDFFileSystemFactory);
+        OutputOption outputOption = new OutputOption(mockFileSystemFactory);
         commandLine = new CommandLine(outputOption);
     }
 
@@ -65,8 +66,8 @@ public class OutputOptionTest {
     }
 
     @Test
-    public void GivenNoParams_WhenExecute_ThenReturnDefaultRDFFile() {
-        when(mockRDFFileSystemFactory.createFile(any(Path.class), any(RDFFormat.class)))
+    public void GivenNoParams_WhenExecute_ThenReturnDefaultRDFFile() throws Exception {
+        when(mockFileSystemFactory.createFile(any(Path.class), anyString(), any(RDFFormat.class)))
                 .thenReturn(mock(RDFFileSystem.class));
         commandLine.execute();
         RDFFileSystem result = commandLine.getExecutionResult();
@@ -81,18 +82,18 @@ public class OutputOptionTest {
     }
 
     @Test
-    public void GivenAnyParams_WhenExecuteTriggerException_ThenReturnCode_34() {
-        when(mockRDFFileSystemFactory.createFile(any(Path.class), any(RDFFormat.class)))
+    public void GivenAnyParams_WhenExecuteTriggerException_ThenReturnCode_34() throws Exception {
+        when(mockFileSystemFactory.createFile(any(Path.class), anyString(), any(RDFFormat.class)))
                 .thenThrow(RuntimeException.class);
         int result = commandLine.execute();
         assertThat(result, is(34));
     }
 
     @Test
-    public void GivenAnyParams_WhenExecuteTriggerException_ThenPrintErrorMessage() {
+    public void GivenAnyParams_WhenExecuteTriggerException_ThenPrintErrorMessage() throws Exception {
         String arg = "--dir" + DELIMITER + testDir;
         String expected = "Unhandled exception occurred during runtime. Aborting." + EOL;
-        when(mockRDFFileSystemFactory.createFile(any(Path.class), any(RDFFormat.class)))
+        when(mockFileSystemFactory.createFile(any(Path.class), anyString(), any(RDFFormat.class)))
                 .thenThrow(RuntimeException.class);
 
         commandLine.execute(arg);
@@ -101,12 +102,13 @@ public class OutputOptionTest {
     }
 
     @Test
-    public void GivenPathParam_WhenExecute_ThenReturnRDFFileWithExpectedPath() {
+    public void GivenPathParam_WhenExecute_ThenReturnRDFFileWithExpectedPath() throws Exception {
         Path testDirectory = Paths.get(OUTPUT_DIR);
         String[] args = new String[]{"--dir" + DELIMITER + testDirectory};
-        RDFFileSystem mockRDFFileSystem = mock(RDFFileSystem.class);
-        when(mockRDFFileSystemFactory.createFile(any(Path.class), any(RDFFormat.class))).thenReturn(mockRDFFileSystem);
-        when(mockRDFFileSystem.getParent()).thenReturn(testDirectory.toString());
+        RDFFileSystem mockFileSystem = mock(RDFFileSystem.class);
+        when(mockFileSystemFactory.createFile(any(Path.class), anyString(), any(RDFFormat.class)))
+                .thenReturn(mockFileSystem);
+        when(mockFileSystem.getParent()).thenReturn(testDirectory.toString());
 
         commandLine.execute(args);
         RDFFileSystem result = commandLine.getExecutionResult();
@@ -119,11 +121,12 @@ public class OutputOptionTest {
 
     @Test
     @Parameters(method = "validFormatParameters")
-    public void GivenRDFFormatParam_WhenExecute_ThenReturnRDFFileWithExpectedFormat(String value) {
+    public void GivenRDFFormatParam_WhenExecute_ThenReturnRDFFileWithExpectedFormat(String value) throws Exception {
         String[] args = new String[]{"--format" + DELIMITER + value};
         RDFFileSystem mockRDFFileSystem = mock(RDFFileSystem.class);
         RDFFormat expected = RDFFileFormat.valueOf(value).getFormat();
-        when(mockRDFFileSystemFactory.createFile(any(Path.class), any(RDFFormat.class))).thenReturn(mockRDFFileSystem);
+        when(mockFileSystemFactory.createFile(any(Path.class), anyString(), any(RDFFormat.class)))
+                .thenReturn(mockRDFFileSystem);
         when(mockRDFFileSystem.getFormat()).thenReturn(expected);
 
         commandLine.execute(args);
@@ -132,12 +135,13 @@ public class OutputOptionTest {
     }
 
     @Test
-    public void GivenFilenameParam_WhenExecute_ThenReturnRDFFileWithExpectedFilename() {
+    public void GivenFilenameParam_WhenExecute_ThenReturnRDFFileWithExpectedFilename() throws Exception {
         String filename = "filename.nt";
         String[] args = new String[]{"--filename" + DELIMITER + filename};
         RDFFileSystem mockRDFFileSystem = mock(RDFFileSystem.class);
         when(mockRDFFileSystem.getName()).thenReturn(filename);
-        when(mockRDFFileSystemFactory.createFile(any(Path.class), any(RDFFormat.class))).thenReturn(mockRDFFileSystem);
+        when(mockFileSystemFactory.createFile(any(Path.class), anyString(), any(RDFFormat.class)))
+                .thenReturn(mockRDFFileSystem);
 
         commandLine.execute(args);
         RDFFileSystem result = commandLine.getExecutionResult();

@@ -15,22 +15,22 @@ import static org.mockito.Mockito.mock;
 /**
  * Unit test class for {@code RDFFileFactory}.
  */
-public class RDFFileSystemFactoryTest {
+public class FileSystemFactoryTest {
 
     private static final String OUTPUT_DIR = "rdfweaver-test-";
     private Path testDir;
-    private RDFFileSystemFactory rdfFileSystemFactory;
+    private FileSystemFactory fileSystemFactory;
 
     @Before
     public void setUp() throws Exception {
         testDir = Files.createTempDirectory(OUTPUT_DIR);
-        rdfFileSystemFactory = new RDFFileSystemFactory();
+        fileSystemFactory = new FileSystemFactory();
     }
 
     @Test
-    public void GivenParams_WhenCreateFile_ThenReturnRDFile() {
+    public void GivenParams_WhenCreateFile_ThenReturnRDFile() throws Exception {
         String filename = "rdfFile.nt";
-        RDFFileSystem result = rdfFileSystemFactory.createFile(testDir.resolve(filename), mock(RDFFormat.class));
+        RDFFileSystem result = fileSystemFactory.createFile(testDir, filename, mock(RDFFormat.class));
         assertThat(result, is(notNullValue()));
     }
 }
