@@ -21,12 +21,14 @@ import java.util.concurrent.Callable;
         exitCodeOnInvalidInput = 32,
         exitCodeOnExecutionException = 34,
         description = "Output of mapped RDF result.")
-public class OutputOption implements Callable<RDFFileSystem> {
+public class OutputOption implements Callable<RDFOutput> {
 
     private static final Logger LOGGER = LogManager.getLogger(OutputOption.class);
     private final FileSystemFactory fsFactory;
-    @ArgGroup
-    private final FileSystem fileSystem = new FileSystem();
+    @ArgGroup(exclusive = false)
+    private FileSystem fileSystem = new FileSystem();
+    @ArgGroup(exclusive = false)
+    private FusekiTDB fusekiTDB;
     @Spec
     private CommandSpec spec;
 
@@ -39,10 +41,13 @@ public class OutputOption implements Callable<RDFFileSystem> {
     }
 
     @Override
-    public RDFFileSystem call() {
+    public RDFOutput call() {
         CommandLine cmd = spec.commandLine();
         cmd.setCaseInsensitiveEnumValuesAllowed(false);
         try {
+            if (fusekiTDB != null) {
+                return null;
+            }
             return fsFactory.createFile(fileSystem.path.toPath(), fileSystem.filename, fileSystem.format.getFormat());
         } catch (IOException ex) {
             String msg = "I/O error: Failed to create directory path: " + fileSystem.path.toPath();

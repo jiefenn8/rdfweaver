@@ -147,4 +147,11 @@ public class OutputOptionTest {
         RDFFileSystem result = commandLine.getExecutionResult();
         assertThat(result.getName(), is(equalTo(filename)));
     }
+
+    @Test
+    public void GivenFusekiTDBReqParams_WhenExecute_ThenReturnCode_0(){
+        String[] args = new String[]{"--host=localhost", "--port=3030", "--baseName=ds"};
+        int result = commandLine.execute(args);
+        assertThat(result, is(0));
+    }
 }

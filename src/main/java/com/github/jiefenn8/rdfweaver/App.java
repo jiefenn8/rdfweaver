@@ -5,6 +5,7 @@ import com.github.jiefenn8.graphloom.api.InputSource;
 import com.github.jiefenn8.graphloom.rdf.RDFMapper;
 import com.github.jiefenn8.rdfweaver.options.ServerOption;
 import com.github.jiefenn8.rdfweaver.output.RDFFileSystem;
+import com.github.jiefenn8.rdfweaver.output.RDFOutput;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -30,7 +31,7 @@ public class App implements Runnable {
     private CommandLine cmd;
     private InputSource inputSource;
     private ConfigMaps configMaps;
-    private RDFFileSystem rdfFileSystem;
+    private RDFOutput rdfOutput;
 
     /**
      * Constructs an App instance with default {@link RDFMapper}.
@@ -111,16 +112,15 @@ public class App implements Runnable {
         collectAllSubResults(cmd).forEach((obj) -> {
             if (obj instanceof InputSource) inputSource = ((InputSource) obj);
             if (obj instanceof ConfigMaps) configMaps = ((ConfigMaps) obj);
-            if (obj instanceof RDFFileSystem) rdfFileSystem = ((RDFFileSystem) obj);
+            if (obj instanceof RDFFileSystem) rdfOutput = ((RDFFileSystem) obj);
         });
 
         try {
-            rdfFileSystem.save(rdfMapper.mapToGraph(inputSource, configMaps));
-            cmd.getOut().println("RDF mapping complete. Output: " + rdfFileSystem);
+            rdfOutput.save(rdfMapper.mapToGraph(inputSource, configMaps));
+            cmd.getOut().println("RDF mapping complete. Output: " + rdfOutput);
         } catch (IOException ex) {
             ex.printStackTrace(cmd.getErr());
         }
-
         return spec.exitCodeOnSuccess();
     }
 
