@@ -10,9 +10,11 @@ services:
 before_install:
  - chmod +x gradlew
  - chmod +x script/docker_mssql_setup_script.sh
+ - chmod +x script/docker_fuseki_setup_script.sh
  
 install:
  - ./script/docker_mssql_setup_script.sh
+ - ./script/docker_fuseki_setup_script.sh
  - ./gradlew assemble
 
 script:
