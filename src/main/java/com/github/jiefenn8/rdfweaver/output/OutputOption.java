@@ -1,5 +1,6 @@
 package com.github.jiefenn8.rdfweaver.output;
 
+import org.apache.jena.riot.RDFFormat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -10,6 +11,7 @@ import picocli.CommandLine.Model.CommandSpec;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
 
@@ -24,20 +26,20 @@ import java.util.concurrent.Callable;
 public class OutputOption implements Callable<RDFOutput> {
 
     private static final Logger LOGGER = LogManager.getLogger(OutputOption.class);
-    private final FileSystemFactory fsFactory;
+    private final RDFOutputFactory rdfOutputFactory;
     @ArgGroup(exclusive = false)
-    private FileSystem fileSystem = new FileSystem();
+    private final FileSystem fileSystem = new FileSystem();
     @ArgGroup(exclusive = false)
-    private FusekiTDB fusekiTDB;
+    private FusekiTDB fuseki;
     @Spec
     private CommandSpec spec;
 
     public OutputOption() {
-        this.fsFactory = new FileSystemFactory();
+        this.rdfOutputFactory = new RDFOutputFactory();
     }
 
-    public OutputOption(@NonNull FileSystemFactory fsFactory) {
-        this.fsFactory = fsFactory;
+    public OutputOption(@NonNull RDFOutputFactory rdfOutputFactory) {
+        this.rdfOutputFactory = rdfOutputFactory;
     }
 
     @Override
@@ -45,10 +47,14 @@ public class OutputOption implements Callable<RDFOutput> {
         CommandLine cmd = spec.commandLine();
         cmd.setCaseInsensitiveEnumValuesAllowed(false);
         try {
-            if (fusekiTDB != null) {
-                return null;
+            if (fuseki != null) {
+                return rdfOutputFactory.createFusekiBuilder(fuseki.host, fuseki.port, fuseki.baseName)
+                        .graphName(fuseki.graphName)
+                        .build();
             }
-            return fsFactory.createFile(fileSystem.path.toPath(), fileSystem.filename, fileSystem.format.getFormat());
+            Path filePath = fileSystem.path.toPath();
+            RDFFormat format = fileSystem.format.getFormat();
+            return rdfOutputFactory.createFileSystem(filePath, fileSystem.filename, format);
         } catch (IOException ex) {
             String msg = "I/O error: Failed to create directory path: " + fileSystem.path.toPath();
             cmd.getOut().println(msg);
@@ -62,6 +68,11 @@ public class OutputOption implements Callable<RDFOutput> {
         }
     }
 
+    /**
+     * FileSystem related options.
+     * <p>
+     * This is the default if no other arg group is initialised.
+     */
     static class FileSystem {
         private static final String DEFAULT_DIR = "output";
         private static final String DIR_DESC = "RDF output directory. (default: ${DEFAULT-VALUE})";
@@ -77,6 +88,9 @@ public class OutputOption implements Callable<RDFOutput> {
         private RDFFileFormat format;
     }
 
+    /**
+     * Fuseki Remote TDB remote options.
+     */
     static class FusekiTDB {
         private static final String HOST_DESC = "Fuseki server host name";
         private static final String PORT_DESC = "Fuseki server port";

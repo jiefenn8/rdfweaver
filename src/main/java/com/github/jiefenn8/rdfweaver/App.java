@@ -4,7 +4,6 @@ import com.github.jiefenn8.graphloom.api.ConfigMaps;
 import com.github.jiefenn8.graphloom.api.InputSource;
 import com.github.jiefenn8.graphloom.rdf.RDFMapper;
 import com.github.jiefenn8.rdfweaver.options.ServerOption;
-import com.github.jiefenn8.rdfweaver.output.RDFFileSystem;
 import com.github.jiefenn8.rdfweaver.output.RDFOutput;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -112,7 +111,7 @@ public class App implements Runnable {
         collectAllSubResults(cmd).forEach((obj) -> {
             if (obj instanceof InputSource) inputSource = ((InputSource) obj);
             if (obj instanceof ConfigMaps) configMaps = ((ConfigMaps) obj);
-            if (obj instanceof RDFFileSystem) rdfOutput = ((RDFFileSystem) obj);
+            if (obj instanceof RDFOutput) rdfOutput = ((RDFOutput) obj);
         });
 
         try {
