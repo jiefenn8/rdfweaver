@@ -102,7 +102,8 @@ public class AppTest {
         String fusekiHost = "--host" + DELIMITER + fHost; //Should be in the same local machine (TravisCI).
         int fPort = 3030;
         String fusekiPort = "--port" + DELIMITER + fPort;
-        String fusekiBase = "--baseName" + DELIMITER + "ds";
+        String fBase = "ds";
+        String fusekiBase = "--baseName" + DELIMITER + fBase;
 
         //Full arg array assembly
         String[] args = new String[]{
@@ -116,7 +117,7 @@ public class AppTest {
                 .setScheme("http")
                 .setHost(fHost)
                 .setPort(fPort)
-                .setPath(fusekiBase)
+                .setPath(fBase)
                 .build()
                 .toASCIIString();
 
