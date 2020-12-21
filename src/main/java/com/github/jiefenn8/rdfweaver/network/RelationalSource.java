@@ -35,22 +35,30 @@ public class RelationalSource implements InputSource {
     private boolean timedOut = false;
 
     /**
-     * Constructs a {@code RelationalSource} with the specified Builder containing
-     * the properties to populate and initialise this immutable instance.
+     * Constructs a {@code RelationalSource} instance with the specified Builder
+     * containing the properties to populate and initialise this instance.
      *
-     * @param builder the database source builder to build from
+     * @param builder the builder to construct this instance
      */
     private RelationalSource(Builder builder) {
         database = builder.database;
         dataSource = builder.dataSource;
     }
 
-    public void initRetrieval(SourceConfig sourceConfig) {
+    /**
+     * Initialise the retrieval of data specified by the SQL query in
+     * {@link SourceConfig}.
+     */
+    private void initRetrieval(SourceConfig sourceConfig) {
         EntityRecordRetrievalTask errt = new EntityRecordRetrievalTask(sourceConfig);
         ExecutorService executor = Executors.newFixedThreadPool(1);
         executor.submit(errt);
     }
 
+    /**
+     * Initialise and run a thread to get all the SQL query data into batches
+     * while returning the specified batch requested.
+     */
     @Override
     public EntityRecord getEntityRecord(@NonNull SourceConfig sourceConfig, int batchId) {
         if (entityRecordMap.isEmpty()) {
@@ -213,14 +221,24 @@ public class RelationalSource implements InputSource {
         }
     }
 
+    /**
+     * This class contains the methods required to
+     */
     public class EntityRecordRetrievalTask implements Callable<Integer> {
 
         private final SourceConfig sourceConfig;
 
+        /**
+         * Constructs an {@code EntityRecordRetrievalTask} instance with the
+         * specified {@link SourceConfig}.
+         */
         public EntityRecordRetrievalTask(SourceConfig sourceConfig) {
             this.sourceConfig = sourceConfig;
         }
 
+        /**
+         * Retrieval relevant SQL query data from connection.
+         */
         private void retrieveTableData(Connection conn) throws SQLException {
             if (!database.isEmpty()) {
                 conn.setCatalog(database);
@@ -253,6 +271,9 @@ public class RelationalSource implements InputSource {
             }
         }
 
+        /**
+         * Create and return a {@code MutableRecord} containing data of one row.
+         */
         private MutableRecord buildRecord(ResultSetMetaData rsmd, ResultSet rs) throws SQLException {
             int columnCount = rsmd.getColumnCount();
             String colName = rsmd.getColumnName(1);
@@ -264,6 +285,11 @@ public class RelationalSource implements InputSource {
             return mr;
         }
 
+        /**
+         * Start retrieval execution
+         *
+         * @return exit code 0 if successful, otherwise -1
+         */
         @Override
         public Integer call() {
             try (Connection conn = dataSource.getConnection()) {

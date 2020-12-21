@@ -34,10 +34,20 @@ public class OutputOption implements Callable<RDFOutput> {
     @Spec
     private CommandSpec spec;
 
+    /**
+     * Constructs an {@code OutputOption} instance with default
+     * {@link RDFOutputFactory}.
+     */
     public OutputOption() {
         this.rdfOutputFactory = new RDFOutputFactory();
     }
 
+    /**
+     * Construct any {@code OutputOption} instance with specified
+     * {@link RDFOutputFactory}.
+     *
+     * @param rdfOutputFactory the factory to use
+     */
     public OutputOption(@NonNull RDFOutputFactory rdfOutputFactory) {
         this.rdfOutputFactory = rdfOutputFactory;
     }

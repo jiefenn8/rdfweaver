@@ -31,6 +31,15 @@ public class RDFOutputFactory {
         return rdfOutput;
     }
 
+    /**
+     * Constructs a {@code FusekiTDBRemote.Builder} instance with the specified
+     * host, port and graph base name.
+     *
+     * @param host the remote address to the Fuseki database
+     * @param port the port to access database
+     * @param baseName the base name of the graph
+     * @return the builder instance with the provided parameters
+     */
     protected FusekiTDBRemote.Builder createFusekiBuilder(@NonNull InetAddress host, int port, @NonNull String baseName) {
         return new FusekiTDBRemote.Builder(host, port, baseName);
     }

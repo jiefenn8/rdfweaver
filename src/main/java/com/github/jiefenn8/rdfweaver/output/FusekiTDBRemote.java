@@ -19,6 +19,12 @@ public class FusekiTDBRemote implements RDFOutput {
     private final String connStr;
     private final String graphName;
 
+    /**
+     * Constructs a {@code FusekiTDBRemote} instance with the specified Builder
+     * containing the properties to populate and initialise this instance.
+     *
+     * @param builder the builder to construct this instance
+     */
     public FusekiTDBRemote(Builder builder) {
         connStr = builder.connStr;
         graphName = builder.graphName;

@@ -26,10 +26,20 @@ public class R2RMLOption implements Callable<R2RMLMap> {
     private final File r2rmlFile = new File(StringUtils.EMPTY);
     @Spec private CommandSpec spec;
 
+    /**
+     * Constructs a {@code R2RMLOption} instance with default
+     * {@link R2RMLBuilder}.
+     */
     public R2RMLOption() {
         this.builder = new R2RMLBuilder();
     }
 
+    /**
+     * Constructs a {@code R2RMLOption} instance with specified
+     * {@link R2RMLBuilder}.
+     *
+     * @param builder the R2RML builder instance to use
+     */
     public R2RMLOption(R2RMLBuilder builder) {
         this.builder = builder;
     }
