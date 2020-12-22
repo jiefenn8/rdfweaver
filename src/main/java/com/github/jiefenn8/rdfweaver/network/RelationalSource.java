@@ -95,7 +95,7 @@ public class RelationalSource implements InputSource {
             }
             conn.setCatalog(database);
             try (Statement stmt = conn.createStatement()) {
-                String query = "SELECT COUNT(*) over () total_rows FROM EMP;";
+                String query = "SELECT COUNT(*) over () total_rows FROM " + sourceConfig.getPayload() + ";";
                 try (ResultSet rs = stmt.executeQuery(query)) {
                     rs.next();
                     int size = rs.getInt("total_rows");
