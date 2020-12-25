@@ -3,6 +3,7 @@ package com.github.jiefenn8.rdfweaver.network;
 import com.github.jiefenn8.graphloom.api.*;
 import com.github.jiefenn8.graphloom.api.SourceConfig.PayloadType;
 import com.github.jiefenn8.graphloom.rdf.r2rml.DatabaseType;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -10,9 +11,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import javax.sql.DataSource;
 import java.net.InetAddress;
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,12 +26,9 @@ public class RelationalSource implements InputSource {
     private static final int MAX_BATCH_ROWS = 1000;
     private static final int SLEEP_DURATION = 6000;
     private static final int TIMEOUT_DURATION = 60000;
-    private final Map<Integer, EntityRecord> entityRecordMap = new HashMap<>();
+    private final Map<SourceConfig, Map<Integer, EntityRecord>> sourceConfigMap = new HashMap<>();
     private final DataSource dataSource;
     private final String database;
-    private int batchCount;
-    private boolean retrievalStarted = false;
-    private boolean timedOut = false;
 
     /**
      * Constructs a {@code RelationalSource} instance with the specified Builder
@@ -46,13 +42,15 @@ public class RelationalSource implements InputSource {
     }
 
     /**
-     * Initialise the retrieval of data specified by the SQL query in
-     * {@link SourceConfig}.
+     * Register any new {@link SourceConfig} and map to its own entity record
+     * collection; And initialise the retrieval of data specified by the SQL
+     * query in the {@code SourceConfig}.
      */
     private void initRetrieval(SourceConfig sourceConfig) {
-        EntityRecordRetrievalTask errt = new EntityRecordRetrievalTask(sourceConfig);
+        sourceConfigMap.put(sourceConfig, new HashMap<>());
+        EntityRecordRetrievalTask task = new EntityRecordRetrievalTask(sourceConfig);
         ExecutorService executor = Executors.newFixedThreadPool(1);
-        executor.submit(errt);
+        executor.submit(task);
     }
 
     /**
@@ -61,30 +59,46 @@ public class RelationalSource implements InputSource {
      */
     @Override
     public EntityRecord getEntityRecord(@NonNull SourceConfig sourceConfig, int batchId) {
-        if (entityRecordMap.isEmpty()) {
+        LOGGER.info("Searching for records of batch " + batchId);
+        if(!sourceConfigMap.containsKey(sourceConfig)){
+            LOGGER.info("Source not found, starting retrieval task.");
             initRetrieval(sourceConfig);
-            int sleepCycleCount = 0;
-            int totalSleepDuration = 0;
-            while (!retrievalStarted && !timedOut) {
-                try {
-                    if (totalSleepDuration >= TIMEOUT_DURATION) {
-                        timedOut = true;
-                    }
-                    Thread.sleep(SLEEP_DURATION);
-                    totalSleepDuration = totalSleepDuration + SLEEP_DURATION;
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                sleepCycleCount++;
-            }
         }
+        return waitForBatch(sourceConfigMap.get(sourceConfig), batchId);
+    }
 
-        EntityRecord result = entityRecordMap.get(batchId);
-        entityRecordMap.remove(batchId);
-        if (batchId >= batchCount) {
-            entityRecordMap.clear();
+    /**
+     * Put the main thread to sleep until it the batch wanted is available, else
+     * reach the {@code TIMEOUT_DURATION} and abort the program.
+     */
+    private EntityRecord waitForBatch(@NonNull Map<Integer, EntityRecord> entityStore, int batchId) {
+        int threadDuration = 0;
+        while (threadDuration < TIMEOUT_DURATION) {
+            if (entityStore.containsKey(batchId)) {
+                LOGGER.info("Batch " + batchId + " received.");
+                return entityStore.get(batchId);
+            }
+            threadDuration += sleepAndUpdate();
         }
-        return result;
+        //Return empty entity if batch not found
+        return new MutableEntityRecord();
+    }
+
+    /**
+     * Take and nap and return the duration of the nap afterward.
+     */
+    private int sleepAndUpdate(){
+        long start = System.nanoTime();
+        long end;
+        try{
+            Thread.sleep(SLEEP_DURATION);
+            end = System.nanoTime();
+        } catch(InterruptedException ie){
+            end = System.nanoTime();
+            LOGGER.debug("Thread sleep interrupted.", ie);
+        }
+        long elapsed = (end - start) / 1000000;
+        return Math.toIntExact(elapsed);
     }
 
     @Override
@@ -95,16 +109,40 @@ public class RelationalSource implements InputSource {
             }
             conn.setCatalog(database);
             try (Statement stmt = conn.createStatement()) {
-                String query = "SELECT COUNT(*) over () total_rows FROM " + sourceConfig.getPayload() + ";";
+                String query = sourceConfig.getPayload();
+                PayloadType type = sourceConfig.getPayloadType();
+                if(type.equals(DatabaseType.TABLE_NAME)){
+                    String wrappedPayload = wrapTableQuery(sourceConfig.getPayload());
+                    query = "SELECT COUNT(*) over () total_rows FROM " + wrappedPayload + ";";
+                }
                 try (ResultSet rs = stmt.executeQuery(query)) {
                     rs.next();
-                    int size = rs.getInt("total_rows");
-                    return batchCount = (int) Math.ceil((double) size / MAX_BATCH_ROWS);
+                    int tableSize = rs.getInt("total_rows");
+                    double maxBatch = ((double) tableSize / MAX_BATCH_ROWS);
+                    return ((int) Math.ceil(maxBatch));
                 }
             }
         } catch (SQLException ex) {
+            //Temp handling
+            LOGGER.debug("RuntimeException thrown while calculating number of batches.");
             throw new RuntimeException(ex);
         }
+    }
+
+    /**
+     * Wrap SQL table payload to prevent conflicts with keywords.
+     */
+    private String wrapTableQuery(@NonNull String payload) {
+        StringBuilder result = new StringBuilder(StringUtils.EMPTY);
+        List<String> tokens = Arrays.asList(payload.split("\\."));
+        Iterator<String> it = tokens.iterator();
+        while (it.hasNext()) {
+            result.append("[").append(it.next()).append("]");
+            if (it.hasNext()) {
+                result.append(".");
+            }
+        }
+        return result.toString();
     }
 
     /**
@@ -222,7 +260,8 @@ public class RelationalSource implements InputSource {
     }
 
     /**
-     * This class contains the methods required to
+     * This class contains the methods required to retrieve query data in the
+     * background during main thread execution.
      */
     public class EntityRecordRetrievalTask implements Callable<Integer> {
 
@@ -237,38 +276,45 @@ public class RelationalSource implements InputSource {
         }
 
         /**
-         * Retrieval relevant SQL query data from connection.
+         * Retrieval relevant SQL query results from connection.
          */
-        private void retrieveTableData(Connection conn) throws SQLException {
+        private void retrieveQueryResults(Connection conn) throws SQLException {
             if (!database.isEmpty()) {
                 conn.setCatalog(database);
             }
             try (Statement stmt = conn.createStatement()) {
-                String query = "SELECT * FROM " + sourceConfig.getPayload() + ";";
-                try (ResultSet rs = stmt.executeQuery(query)) {
-                    ResultSetMetaData rsmd = rs.getMetaData();
-                    MutableEntityRecord mer = new MutableEntityRecord();
-
-                    int count = 0;
-                    int rowCount = 0;
-                    while (rs.next()) {
-                        mer.addRecord(buildRecord(rsmd, rs));
-                        if (rowCount >= MAX_BATCH_ROWS) {
-                            entityRecordMap.put(count, mer);
-                            retrievalStarted = true;
-                            rowCount = 0;
-                            count++;
+                try (ResultSet results = stmt.executeQuery(handleQueryType())) {
+                    int id = 0;
+                    ResultSetMetaData metaData = results.getMetaData();
+                    MutableEntityRecord entityBatch = new MutableEntityRecord();
+                    Map<Integer, EntityRecord> entityBatches = sourceConfigMap.get(sourceConfig);
+                    while (results.next()) {
+                        entityBatch.addRecord(buildRecord(metaData, results));
+                        if (entityBatch.size() >= MAX_BATCH_ROWS) {
+                            entityBatches.put(id, entityBatch);
+                            id++;
                         }
-
-                        rowCount++;
-
                     }
-                    if (!mer.isEmpty()) {
-                        entityRecordMap.put(count, mer);
-                        retrievalStarted = true;
-                    }
+                    entityBatches.put(id, entityBatch);
                 }
             }
+        }
+
+        /**
+         * Handle any change in the query string to be usable if needed.
+         */
+        public String handleQueryType(){
+            String query = sourceConfig.getPayload();
+            PayloadType type = sourceConfig.getPayloadType();
+            if (type.equals(DatabaseType.TABLE_NAME)) {
+                String wrappedPayload = wrapTableQuery(sourceConfig.getPayload());
+                query = "SELECT * FROM " + wrappedPayload + ";";
+            }
+            /**
+            if(type.equals(DatabaseType.QUERY)){
+                //placeholder
+            }**/
+            return query;
         }
 
         /**
@@ -286,22 +332,20 @@ public class RelationalSource implements InputSource {
         }
 
         /**
-         * Start retrieval execution
+         * Start retrieval execution of source data.
          *
          * @return exit code 0 if successful, otherwise -1
          */
         @Override
         public Integer call() {
+            LOGGER.traceEntry("Thread starting retrieval of data.");
             try (Connection conn = dataSource.getConnection()) {
                 conn.setCatalog(database);
-                PayloadType payloadType = sourceConfig.getPayloadType();
-                if (payloadType.equals(DatabaseType.TABLE_NAME)) {
-                    retrieveTableData(conn);
-                }
-                return 0;
+                retrieveQueryResults(conn);
+                return LOGGER.traceExit("Thread finished retrieving data.", 0);
             } catch (SQLException ex) {
-                LOGGER.error(ex);
-                return -1;
+                LOGGER.error("SQLException occurred during data retrieval", ex);
+                return LOGGER.traceExit("Aborting thread.", -1);
             }
         }
     }
