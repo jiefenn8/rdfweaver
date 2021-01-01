@@ -55,7 +55,7 @@ dependencies {
 
     //Core
     implementation group: 'info.picocli', name: 'picocli', version: '4.2.0'
-    implementation group: 'com.github.jiefenn8.graphloom', name: 'graphloom-core', version: '0.4.2'
+    implementation group: 'com.github.jiefenn8.graphloom', name: 'graphloom-core', version: '0.4.5'
     implementation group: 'com.google.guava', name: 'guava', version: '29.0-jre'
     implementation group: 'org.apache.jena', name: 'jena-arq', version: '3.5.0'
     implementation group: 'org.apache.jena', name: 'jena-rdfconnection', version: '3.5.0'
