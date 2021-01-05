@@ -1,7 +1,5 @@
-package com.github.jiefenn8.rdfweaver.options;
+package com.github.jiefenn8.rdfweaver.server;
 
-import com.github.jiefenn8.rdfweaver.network.JDBCDriver;
-import com.github.jiefenn8.rdfweaver.network.RelationalSource;
 import com.google.common.collect.ImmutableList;
 import com.zaxxer.hikari.pool.HikariPool;
 import junitparams.JUnitParamsRunner;

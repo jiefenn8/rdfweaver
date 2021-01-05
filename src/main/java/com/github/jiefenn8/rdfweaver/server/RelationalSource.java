@@ -1,4 +1,4 @@
-package com.github.jiefenn8.rdfweaver.network;
+package com.github.jiefenn8.rdfweaver.server;
 
 import com.github.jiefenn8.graphloom.api.*;
 import com.github.jiefenn8.graphloom.api.SourceConfig.PayloadType;

@@ -1,4 +1,4 @@
-package com.github.jiefenn8.rdfweaver.options;
+package com.github.jiefenn8.rdfweaver.r2rml;
 
 import com.github.jiefenn8.graphloom.rdf.parser.R2RMLBuilder;
 import com.github.jiefenn8.graphloom.rdf.r2rml.R2RMLMap;

@@ -1,4 +1,4 @@
-package com.github.jiefenn8.rdfweaver.network;
+package com.github.jiefenn8.rdfweaver.server;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 

@@ -1,7 +1,6 @@
-package com.github.jiefenn8.rdfweaver.options;
+package com.github.jiefenn8.rdfweaver.server;
 
-import com.github.jiefenn8.rdfweaver.network.JDBCDriver;
-import com.github.jiefenn8.rdfweaver.network.RelationalSource;
+import com.github.jiefenn8.rdfweaver.r2rml.R2RMLOption;
 import com.zaxxer.hikari.pool.HikariPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

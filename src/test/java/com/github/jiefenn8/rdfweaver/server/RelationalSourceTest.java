@@ -1,4 +1,4 @@
-package com.github.jiefenn8.rdfweaver.network;
+package com.github.jiefenn8.rdfweaver.server;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -12,7 +12,7 @@ import javax.sql.DataSource;
 import java.net.InetAddress;
 import java.util.Properties;
 
-import static com.github.jiefenn8.rdfweaver.network.JDBCDriver.MSSQL;
+import static com.github.jiefenn8.rdfweaver.server.JDBCDriver.MSSQL;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;

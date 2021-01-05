@@ -3,8 +3,8 @@ package com.github.jiefenn8.rdfweaver;
 import com.github.jiefenn8.graphloom.api.ConfigMaps;
 import com.github.jiefenn8.graphloom.api.InputSource;
 import com.github.jiefenn8.graphloom.rdf.RDFMapper;
-import com.github.jiefenn8.rdfweaver.options.ServerOption;
 import com.github.jiefenn8.rdfweaver.output.RDFOutput;
+import com.github.jiefenn8.rdfweaver.server.ServerOption;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -75,7 +75,14 @@ public class App implements Runnable {
         }
     }
 
-    protected int start(@NonNull CommandLine cmd, @NonNull String... args) {
+    /**
+     * Main execution method of the mapping program.
+     *
+     * @param cmd  the root command line to start program with
+     * @param args the arguments to execute the program with
+     * @return status code of the execution
+     */
+    private int start(@NonNull CommandLine cmd, @NonNull String... args) {
         cmd.addSubcommand(serverOption);
         cmd.setExecutionStrategy(new RunAll());
         return processResults(cmd.execute(args));

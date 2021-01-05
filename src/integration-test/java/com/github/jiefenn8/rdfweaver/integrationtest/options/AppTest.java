@@ -1,7 +1,7 @@
 package com.github.jiefenn8.rdfweaver.integrationtest.options;
 
 import com.github.jiefenn8.rdfweaver.App;
-import com.github.jiefenn8.rdfweaver.network.JDBCDriver;
+import com.github.jiefenn8.rdfweaver.server.JDBCDriver;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFactory;

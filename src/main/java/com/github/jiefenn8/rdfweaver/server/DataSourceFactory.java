@@ -1,4 +1,4 @@
-package com.github.jiefenn8.rdfweaver.network;
+package com.github.jiefenn8.rdfweaver.server;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
