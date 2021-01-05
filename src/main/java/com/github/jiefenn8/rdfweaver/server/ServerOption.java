@@ -35,11 +35,11 @@ public class ServerOption implements Callable<RelationalSource> {
     private InetAddress host;
     @Option(names = {"-db", "--database"}, defaultValue = "", description = "Database to use (if multiple in host)")
     private String database;
-    @Option(names = {"-t", "--port"}, required = true, description = "Database port")
+    @Option(names = {"-p", "--port"}, required = true, description = "Database port")
     private int port;
     @Option(names = {"-u", "--user"}, required = true, description = "Database login")
     private String user;
-    @Option(names = {"-p", "--pass"}, required = true, description = "Database password", interactive = true)
+    @Option(names = {"-pw", "--pass"}, required = true, description = "Database password", interactive = true)
     private char[] pass;
     @Spec private CommandSpec spec;
 
