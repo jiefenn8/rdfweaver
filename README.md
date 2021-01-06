@@ -21,7 +21,83 @@ RDFWeaver target is built on Java 8. Visit the [Java site](https://www.java.com/
 
 ### Usage example
 
-TBA
+_At this current version, all subcommands must be chained at the end with the app in order to work successfully. The order of the subcommands does not matter._
+
+_Note: There are plans to improve this in the future._
+
+```
+java rdfweaver-console-x.x.x.jar <subcommand 1> <subcommand 2> <subcommand 3>
+
+java rdfweaver-console-x.x.x.jar --server <server args> --r2rml <r2rml args> --output <output args>
+```
+
+#### Server Subcommand (--server):
+
+**Required:**
+
+(-d, --driver) Database driver
+
+(-h, --host) Database host URL
+
+(-p, --port) Database host port
+
+(-u, --user) Login to access database
+
+(-pw, --password) Password for login
+
+**Optional:**
+
+(-db, --database) Database to use within a host (if multiple instances exist)
+
+Example: 
+```
+--server --driver=MSSQL --host=192.168.1.1 --port=1433 --user=sa --password=YourStrong@Passw0rd --database=MyDatabase01
+```
+
+#### R2RML Subcommand (--r2rml):
+
+**Required:**
+
+(-f, --file) R2RML path including filename
+
+Example: --r2rml --file=C:/MyFolder/MyR2RML.ttl
+
+#### Output Subcommands (--output):
+
+For file output:
+
+**Optional:**
+
+(-d, --dir) File output directory (default: /output in app directory)
+
+(-n, --name) File output name (default: rdfOutput.ttl)
+
+(-f, --format) File format to output the RDF triples as (Default: NTRIPLES) 
+
+Example: 
+
+``` 
+--output --dir=C:/MyOutputDirectory --name=MyRDFOutput.ttl --format=TURTLE
+```
+
+For Fuseki database output:
+
+**Required:**
+
+(-h, --host) Fuseki database host URL 
+
+(-p, --port) Fuseki database host port
+
+(-b, --baseName) Fuseki database endpoint base name
+
+**Optional:**
+
+(-g, --graphName) Fuseki database graph name to upload RDF data under
+
+Example: 
+```
+--output --host=192.168.1.1 --port=8080 --baseName=ds --graphName=default
+```
 
 ## More information
 
