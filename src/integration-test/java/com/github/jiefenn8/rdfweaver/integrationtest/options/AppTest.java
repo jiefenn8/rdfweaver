@@ -1,6 +1,6 @@
 package com.github.jiefenn8.rdfweaver.integrationtest.options;
 
-import com.github.jiefenn8.rdfweaver.App;
+import com.github.jiefenn8.rdfweaver.EntryPoint;
 import com.github.jiefenn8.rdfweaver.server.JDBCDriver;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.jena.query.ResultSet;
@@ -78,7 +78,7 @@ public class AppTest {
         //Full arg array assembly
         String[] args = new String[]{"server", driver, db, host, port, user, pass, "r2rml", r2rml, "output"};
 
-        App.main(args);
+        EntryPoint.main(args);
         boolean result = Files.exists(expectedOutput);
         assertThat(result, is(true));
     }
@@ -112,7 +112,7 @@ public class AppTest {
                 "output", fusekiHost, fusekiPort, fusekiBase
         };
 
-        App.main(args);
+        EntryPoint.main(args);
         String connStr = new URIBuilder()
                 .setScheme("http")
                 .setHost(fHost)

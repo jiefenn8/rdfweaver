@@ -51,19 +51,6 @@ public class App implements Runnable {
     }
 
     /**
-     * Main program execution entry.
-     *
-     * @param args the arguments given to app
-     */
-    public static void main(@NonNull String... args) {
-        LOGGER.trace("Entering application.");
-        App app = new App();
-        int code = app.start(new CommandLine(app), args);
-        LOGGER.trace("Exiting application with code " + code + ".");
-        LOGGER.traceExit();
-    }
-
-    /**
      * Checks that the required subcommands is given as argument. Throws an
      * exception if the requirements are not met.
      */
@@ -82,10 +69,11 @@ public class App implements Runnable {
      * @param args the arguments to execute the program with
      * @return status code of the execution
      */
-    private int start(@NonNull CommandLine cmd, @NonNull String... args) {
+    public int start(@NonNull CommandLine cmd, @NonNull String... args) {
+        LOGGER.trace("Entering application.");
         cmd.addSubcommand(serverOption);
         cmd.setExecutionStrategy(new RunAll());
-        return processResults(cmd.execute(args));
+        return LOGGER.traceExit("Exiting application with code {}.", processResults(cmd.execute(args)));
     }
 
     /**
