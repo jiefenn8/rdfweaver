@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="warn" name="RDFWeaver" packages="org.apache.logging.log4j.test">
+<Configuration status="warn" name="RDFWeaver">
     <Properties>
         <Property name="log-path">logs/</Property>
         <Property name="filename">app</Property>
@@ -11,7 +11,8 @@
         </Console>
         <RollingFile
                 name="AppFile" fileName="${log-path}${filename}.log"
-                filePattern="${log-path}${file-name}-${file-pattern}.log.gz" append="false">
+                filePattern="${log-path}${file-name}-${file-pattern}.log.gz"
+                immediateFlush="false" append="false">
             <PatternLayout pattern="%d{HH:mm:ss,SSS} [%t] %-5level %logger{36} - %msg%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
@@ -22,9 +23,9 @@
         </RollingFile>
     </Appenders>
     <Loggers>
-        <Root level="trace">
-            <AppenderRef ref="Console" level="warn"/>
-            <AppenderRef ref="AppFile" level="warn"/>
+        <Root level="all">
+            <AppenderRef ref="Console" level="info"/>
+            <AppenderRef ref="AppFile" level="info"/>
         </Root>
     </Loggers>
 </Configuration>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="trace" name="RDFWeaver" packages="org.apache.logging.log4j.test">
+<Configuration status="trace" name="RDFWeaver">
     <Properties>
         <Property name="log-path">logs/</Property>
         <Property name="app-filename">app</Property>
@@ -34,9 +34,9 @@
         </RollingFile>
     </Appenders>
     <Loggers>
-        <Root level="trace">
-            <AppenderRef ref="Console" level="trace"/>
-            <AppenderRef ref="AppFile" level="warn"/>
+        <Root level="all">
+            <AppenderRef ref="Console" level="info"/>
+            <AppenderRef ref="AppFile" level="info"/>
             <AppenderRef ref="DebugFile" level="trace"/>
         </Root>
     </Loggers>
