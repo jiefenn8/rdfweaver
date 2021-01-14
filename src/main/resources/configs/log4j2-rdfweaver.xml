@@ -2,15 +2,16 @@
 <Configuration status="warn" name="RDFWeaver">
     <Properties>
         <Property name="log-path">logs/</Property>
-        <Property name="filename">app</Property>
+        <Property name="app-filename">app</Property>
+        <Property name="debug-filename">debug</Property>
         <Property name="file-pattern">%d{yyyy-MM-dd-HH}_%i</Property>
     </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss,SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <PatternLayout pattern="%d{HH:mm,ss} [%t] %-5level- %msg%n"/>
         </Console>
         <RollingFile
-                name="AppFile" fileName="${log-path}${filename}.log"
+                name="AppFile" fileName="${log-path}${app-filename}.log"
                 filePattern="${log-path}${file-name}-${file-pattern}.log.gz"
                 immediateFlush="false" append="false">
             <PatternLayout pattern="%d{HH:mm:ss,SSS} [%t] %-5level %logger{36} - %msg%n"/>
@@ -21,11 +22,23 @@
             </Policies>
             <DefaultRollOverStrategy max="20"/>
         </RollingFile>
+        <RollingFile name="DebugFile" fileName="${log-path}${debug-filename}.log"
+                     filePattern="${log-path}${debug-filename}-${file-pattern}.log.gz"
+                     immediateFlush="false" append="false">
+            <PatternLayout pattern="%d{HH:mm:ss,SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <OnStartupTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="250 MB"/>
+            </Policies>
+            <DefaultRollOverStrategy max="20"/>
+        </RollingFile>
     </Appenders>
     <Loggers>
-        <Root level="all">
+        <Root level="debug">
             <AppenderRef ref="Console" level="info"/>
             <AppenderRef ref="AppFile" level="info"/>
+            <AppenderRef ref="DebugFile" level="all"/>
         </Root>
     </Loggers>
 </Configuration>

@@ -13,7 +13,8 @@
         </Console>
         <RollingFile
                 name="AppFile" fileName="${log-path}${app-filename}.log"
-                filePattern="${log-path}${file-name}-${file-pattern}.log.gz" append="false">
+                filePattern="${log-path}${file-name}-${file-pattern}.log.gz"
+                immediateFlush="false" append="false">
             <PatternLayout pattern="%d{HH:mm:ss,SSS} [%t] %-5level %logger{36} - %msg%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
@@ -23,7 +24,8 @@
             <DefaultRollOverStrategy max="20"/>
         </RollingFile>
         <RollingFile name="DebugFile" fileName="${log-path}${debug-filename}.log"
-                     filePattern="${log-path}${debug-filename}-${file-pattern}.log.gz" append="false">
+                     filePattern="${log-path}${debug-filename}-${file-pattern}.log.gz"
+                     immediateFlush="false" append="false">
             <PatternLayout pattern="%d{HH:mm:ss,SSS} [%t] %-5level %logger{36} - %msg%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
@@ -35,9 +37,9 @@
     </Appenders>
     <Loggers>
         <Root level="all">
-            <AppenderRef ref="Console" level="info"/>
+            <AppenderRef ref="Console" level="all"/>
             <AppenderRef ref="AppFile" level="info"/>
-            <AppenderRef ref="DebugFile" level="trace"/>
+            <AppenderRef ref="DebugFile" level="all"/>
         </Root>
     </Loggers>
 </Configuration>
