@@ -5,6 +5,7 @@ plugins {
     id 'maven-publish'
     id 'com.jfrog.bintray' version '1.8.4'
     id 'jacoco'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
 group 'com.github.jiefenn8.rdfweaver'
@@ -37,18 +38,9 @@ sourceSets {
 
 mainClassName = 'com.github.jiefenn8.rdfweaver.EntryPoint'
 
-jar {
-    manifest {
-        attributes(
-                'Main-Class': mainClassName
-        )
-    }
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-    exclude 'META-INF/*.RSA'
-    exclude 'META-INF/*.SF'
-    exclude 'META-INF/*.DSA'
+shadowJar {
+    archiveClassifier.set('')
+    mergeServiceFiles()
 }
 
 configurations {
