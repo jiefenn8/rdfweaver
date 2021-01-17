@@ -6,6 +6,8 @@ import com.github.jiefenn8.rdfweaver.output.OutputOption;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.n3.turtle.TurtleParseException;
 import org.apache.jena.shared.NotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import picocli.CommandLine;
 import picocli.CommandLine.Model.CommandSpec;
 
@@ -21,6 +23,7 @@ import static picocli.CommandLine.*;
         description = "Load a R2RML file to configure the mapping of data to RDF.")
 public class R2RMLOption implements Callable<R2RMLMap> {
 
+    private static final Logger LOGGER = LogManager.getLogger(R2RMLOption.class);
     private final R2RMLBuilder builder;
     @Option(names = {"-f", "--file"}, required = true, description = "R2RML config file.")
     private final File r2rmlFile = new File(StringUtils.EMPTY);
@@ -53,15 +56,20 @@ public class R2RMLOption implements Callable<R2RMLMap> {
                 String message = String.format("%s not found.", path);
                 throw new NotFoundException(message);
             }
-            return builder.parse(r2rmlFile.getPath());
-        } catch (NotFoundException e) {
-            String message = String.format("R2RML file '%s' is not valid filename or path.", path);
-            cmd.getErr().println(message);
-            throw new ExecutionException(cmd, message, e);
-        } catch (TurtleParseException e) {
-            String message = String.format("R2RML file '%s' does not contain a valid R2RML map.", path);
-            cmd.getErr().println(message);
-            throw new ExecutionException(cmd, message, e);
+            R2RMLMap r2rmlMap = builder.parse(r2rmlFile.getPath());
+            int mapSize = r2rmlMap.getEntityMaps().size();
+            LOGGER.info("Loading R2RML file completed, {} TriplesMaps found.", mapSize);
+            return r2rmlMap;
+        } catch (NotFoundException ex) {
+            String msg = String.format("R2RML file '%s' is not valid filename or path.", path);
+            cmd.getErr().println(msg);
+            LOGGER.fatal(msg, ex);
+            throw new ExecutionException(cmd, msg, ex);
+        } catch (TurtleParseException ex) {
+            String msg = String.format("R2RML file '%s' does not contain a valid R2RML map.", path);
+            cmd.getErr().println(msg);
+            LOGGER.fatal(msg, ex);
+            throw new ExecutionException(cmd, msg, ex);
         }
     }
 }

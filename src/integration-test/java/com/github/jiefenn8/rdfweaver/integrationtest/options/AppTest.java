@@ -19,7 +19,6 @@ import java.nio.file.Paths;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
 
 /**
  * Integration test class for {@code App}.
@@ -132,6 +131,6 @@ public class AppTest {
 
         RDFNode node = copy.next().get("Triples");
         int count = node.asLiteral().getInt();
-        assertThat(count, is(greaterThan(0)));
+        assertThat(count, is(2));
     }
 }

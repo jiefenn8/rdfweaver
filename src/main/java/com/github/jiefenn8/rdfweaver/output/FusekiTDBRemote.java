@@ -31,7 +31,7 @@ public class FusekiTDBRemote implements RDFOutput {
     }
 
     @Override
-    public void save(Model model) {
+    public void save(@NonNull Model model) {
         try (RDFConnection conn = RDFConnectionFactory.connect(connStr)) {
             Txn.executeWrite(conn, () -> conn.put(graphName, model));
         }

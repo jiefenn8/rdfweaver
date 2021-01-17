@@ -1,6 +1,8 @@
 package com.github.jiefenn8.rdfweaver.output;
 
 import org.apache.jena.riot.RDFFormat;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.io.IOException;
@@ -12,6 +14,8 @@ import java.nio.file.Path;
  * {@link RDFOutput}.
  */
 public class RDFOutputFactory {
+
+    private static final Logger LOGGER = LogManager.getLogger(RDFOutputFactory.class);
 
     /**
      * Constructs a {@code RDFFileSystem} instance with the specified
@@ -25,9 +29,11 @@ public class RDFOutputFactory {
      *                     does not exist
      */
     protected RDFFileSystem createFileSystem(@NonNull Path dir, @NonNull String name, @NonNull RDFFormat format) throws IOException {
+        LOGGER.debug("Creating RDFFileSystem for output.");
         Path filePath = FileResolver.resolveFilename(dir, name);
         RDFFileSystem rdfOutput = new RDFFileSystem(filePath, format);
         FileResolver.prepareDir(dir);
+        LOGGER.debug(rdfOutput);
         return rdfOutput;
     }
 

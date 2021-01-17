@@ -57,14 +57,22 @@ public class OutputOption implements Callable<RDFOutput> {
         CommandLine cmd = spec.commandLine();
         cmd.setCaseInsensitiveEnumValuesAllowed(false);
         try {
+            RDFOutput output;
             if (fuseki != null) {
-                return rdfOutputFactory.createFusekiBuilder(fuseki.host, fuseki.port, fuseki.baseName)
+                InetAddress host = fuseki.host;
+                int port = fuseki.port;
+                output = rdfOutputFactory.createFusekiBuilder(host, port, fuseki.baseName)
                         .graphName(fuseki.graphName)
                         .build();
+                LOGGER.info("Output as Fuseki remote set to '{}:{}'.", host.getHostName(), port);
+                return output;
             }
-            Path filePath = fileSystem.path.toPath();
+            Path path = fileSystem.path.toPath();
+            String filename = fileSystem.filename;
             RDFFormat format = fileSystem.format.getFormat();
-            return rdfOutputFactory.createFileSystem(filePath, fileSystem.filename, format);
+            output = rdfOutputFactory.createFileSystem(path, filename, format);
+            LOGGER.info("Output as file set to '{}' path, name '{}', format '{}'.", path, filename, format);
+            return output;
         } catch (IOException ex) {
             String msg = "I/O error: Failed to create directory path: " + fileSystem.path.toPath();
             cmd.getOut().println(msg);

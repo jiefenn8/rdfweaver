@@ -14,6 +14,9 @@ import java.util.Properties;
  */
 public class DataSourceFactory {
 
+     private static final int POOL_SIZE = 5;
+     private static final int TIMEOUT_DURATION = 10000;
+
     /**
      * Returns a DataSource with a established connection with a database with the
      * given server configuration or throw an exception if the configuration is not
@@ -26,8 +29,8 @@ public class DataSourceFactory {
      */
     protected DataSource getDataSource(@NonNull Properties config) {
         HikariConfig serverConfig = new HikariConfig(config);
-        serverConfig.setMaximumPoolSize(5);
-        serverConfig.setConnectionTimeout(10000);
+        serverConfig.setMaximumPoolSize(POOL_SIZE);
+        serverConfig.setConnectionTimeout(TIMEOUT_DURATION);
         return new HikariDataSource(serverConfig);
     }
 }

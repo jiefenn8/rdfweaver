@@ -66,11 +66,14 @@ public class ServerOption implements Callable<RelationalSource> {
         CommandLine cmd = spec.commandLine();
         cmd.setCaseInsensitiveEnumValuesAllowed(false);
         try {
-            return rdbSourceBuilder.newInstance()
+            LOGGER.info("Connecting to database...");
+            RelationalSource source = rdbSourceBuilder.newInstance()
                     .serverHost(driver, host, port)
                     .credential(user, pass)
                     .database(database)
                     .build();
+            LOGGER.info("Connection to database '{}:{}' as '{}' established.", host.getHostName(), port, user);
+            return source;
         } catch (HikariPool.PoolInitializationException ex) {
             String msg = "Server exception occurred during connection attempt.";
             Throwable cause = ex.getCause();
@@ -78,10 +81,12 @@ public class ServerOption implements Callable<RelationalSource> {
                 SQLException sqlException = (SQLException) cause;
                 msg = handleSqlException(sqlException);
             }
+            LOGGER.fatal(msg, ex);
             cmd.getOut().println(msg);
             throw new ExecutionException(cmd, msg, ex);
         } catch (Exception ex) {
             String msg = "Unhandled exception occurred during server command execution. Aborting.";
+            LOGGER.fatal(msg, ex);
             cmd.getOut().println(msg);
             throw new ExecutionException(cmd, msg, ex);
         } finally {
