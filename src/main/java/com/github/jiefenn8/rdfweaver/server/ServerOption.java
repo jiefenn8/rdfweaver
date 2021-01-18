@@ -24,22 +24,28 @@ import java.util.concurrent.Callable;
         exitCodeOnInvalidInput = 22,
         exitCodeOnExecutionException = 24,
         subcommands = {R2RMLOption.class},
-        description = "Connect to a relational database to retrieve data to map.")
+        description = "Server command in handling the connection to relational database to map.")
 public class ServerOption implements Callable<RelationalSource> {
 
     private static final Logger LOGGER = LogManager.getLogger(ServerOption.class);
+    private static final String DRIVER_DESC = "Driver type to connect to specific database vendor.";
+    private static final String HOST_DESC = "IP address or host name to connect to relational database.";
+    private static final String DB_DESC = "Name of database to use (if multiple instances within host.";
+    private static final String PORT_DESC = "Port that the relational database is listening to.";
+    private static final String USER_DESC = "User/login to access the database as.";
+    private static final String PASS_DESC = "Password to authenticate access with given user/login.";
     private final RelationalSource.Builder rdbSourceBuilder;
-    @Option(names = {"-d", "--driver"}, required = true, description = "Database driver")
+    @Option(names = {"-d", "--driver"}, required = true, description = DRIVER_DESC)
     private JDBCDriver driver;
-    @Option(names = {"-h", "--host"}, required = true, description = "Database URL")
+    @Option(names = {"-h", "--host"}, required = true, description = HOST_DESC)
     private InetAddress host;
-    @Option(names = {"-db", "--database"}, defaultValue = "", description = "Database to use (if multiple in host)")
+    @Option(names = {"-db", "--database"}, defaultValue = "", description = DB_DESC)
     private String database;
-    @Option(names = {"-p", "--port"}, required = true, description = "Database port")
+    @Option(names = {"-p", "--port"}, required = true, description = PORT_DESC)
     private int port;
-    @Option(names = {"-u", "--user"}, required = true, description = "Database login")
+    @Option(names = {"-u", "--user"}, required = true, description = USER_DESC)
     private String user;
-    @Option(names = {"-pw", "--pass"}, required = true, description = "Database password", interactive = true)
+    @Option(names = {"-pw", "--pass"}, required = true, description = PASS_DESC, interactive = true)
     private char[] pass;
     @Spec private CommandSpec spec;
 

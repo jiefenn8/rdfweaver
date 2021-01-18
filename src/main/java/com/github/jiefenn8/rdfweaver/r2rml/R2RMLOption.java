@@ -20,12 +20,12 @@ import static picocli.CommandLine.*;
         exitCodeOnInvalidInput = 12,
         exitCodeOnExecutionException = 14,
         subcommands = {OutputOption.class},
-        description = "Load a R2RML file to configure the mapping of data to RDF.")
+        description = "R2RML command in handling the loading of mapping config to mapping processor.")
 public class R2RMLOption implements Callable<R2RMLMap> {
 
     private static final Logger LOGGER = LogManager.getLogger(R2RMLOption.class);
     private final R2RMLBuilder builder;
-    @Option(names = {"-f", "--file"}, required = true, description = "R2RML config file.")
+    @Option(names = {"-f", "--file"}, required = true, description = "Location and filename of the R2RML file.")
     private final File r2rmlFile = new File(StringUtils.EMPTY);
     @Spec private CommandSpec spec;
 
