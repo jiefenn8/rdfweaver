@@ -18,5 +18,5 @@ public interface RDFOutput {
      * @param model the RDF graph to save
      * @throws IOException if any IO error occur for FileSystem implementation
      */
-    void save(@NonNull  Model model) throws IOException;
+    void save(@NonNull Model model) throws IOException;
 }

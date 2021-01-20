@@ -1,7 +1,5 @@
 package com.github.jiefenn8.rdfweaver;
 
-import picocli.CommandLine;
-
 public class EntryPoint {
 
     /**
@@ -12,6 +10,6 @@ public class EntryPoint {
     public static void main(String[] args) {
         System.setProperty("log4j2.configurationFile", "configs/log4j2-rdfweaver.xml");
         App app = new App();
-        app.start(new CommandLine(app), args);
+        app.start(args);
     }
 }

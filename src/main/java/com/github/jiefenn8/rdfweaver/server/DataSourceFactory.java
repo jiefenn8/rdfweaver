@@ -14,8 +14,8 @@ import java.util.Properties;
  */
 public class DataSourceFactory {
 
-     private static final int POOL_SIZE = 5;
-     private static final int TIMEOUT_DURATION = 10000;
+    private static final int POOL_SIZE = 5;
+    private static final int TIMEOUT_DURATION = 10000;
 
     /**
      * Returns a DataSource with a established connection with a database with the

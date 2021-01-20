@@ -1,6 +1,6 @@
 package com.github.jiefenn8.rdfweaver.integrationtest.options;
 
-import com.github.jiefenn8.rdfweaver.EntryPoint;
+import com.github.jiefenn8.rdfweaver.App;
 import com.github.jiefenn8.rdfweaver.server.JDBCDriver;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.jena.query.ResultSet;
@@ -46,12 +46,13 @@ public class AppTest {
     private static final String RDB_USER = "sa";
     private static final String RDB_PASS = "YourStrong@Passw0rd";
     private static final String RDB_DB = "testDb";
-
-
+    
+    private App app;
     private Path expectedOutput;
 
     @Before
     public void setUp() {
+        app = new App();
         expectedOutput = Paths.get("output/rdfOutput.nt").toAbsolutePath();
     }
 
@@ -77,7 +78,7 @@ public class AppTest {
         //Full arg array assembly
         String[] args = new String[]{"server", driver, db, host, port, user, pass, "r2rml", r2rml, "output"};
 
-        EntryPoint.main(args);
+        app.start(args);
         boolean result = Files.exists(expectedOutput);
         assertThat(result, is(true));
     }
@@ -111,7 +112,7 @@ public class AppTest {
                 "output", fusekiHost, fusekiPort, fusekiBase
         };
 
-        EntryPoint.main(args);
+        app.start(args);
         String connStr = new URIBuilder()
                 .setScheme("http")
                 .setHost(fHost)
@@ -132,5 +133,21 @@ public class AppTest {
         RDFNode node = copy.next().get("Triples");
         int count = node.asLiteral().getInt();
         assertThat(count, is(2));
+    }
+
+    //Check if running version command does not encounter exception.
+    @Test
+    public void GivenVersionCommand_WhenExecute_ThenCompleteRun(){
+        String[] args = new String[] {"--version"};
+        int result = app.start(args);
+        assertThat(result, is(0));
+    }
+
+    //Check if running help command does not encounter exception.
+    @Test
+    public void GivenHelpCommand_WhenExecute_ThenCompleteRun(){
+        String[] args = new String[] {"--help"};
+        int result = app.start(args);
+        assertThat(result, is(0));
     }
 }

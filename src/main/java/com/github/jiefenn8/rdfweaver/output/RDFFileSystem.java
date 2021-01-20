@@ -51,7 +51,7 @@ public class RDFFileSystem extends File implements RDFOutput {
 
     @Override
     public void save(@NonNull Model model) throws IOException {
-        try(FileOutputStream outputStream = new FileOutputStream(this)){
+        try (FileOutputStream outputStream = new FileOutputStream(this)) {
             RDFDataMgr.write(outputStream, model, getFormat());
         }
     }
