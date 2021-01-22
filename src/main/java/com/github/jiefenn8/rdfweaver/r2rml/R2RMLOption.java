@@ -20,7 +20,7 @@ import static picocli.CommandLine.*;
         exitCodeOnInvalidInput = 12,
         exitCodeOnExecutionException = 14,
         subcommands = {OutputOption.class},
-        description = "R2RML command in handling the loading of mapping config to mapping processor.")
+        description = "R2RML command in handling the loading of mapping config to mapper.")
 public class R2RMLOption implements Callable<R2RMLMap> {
 
     private static final Logger LOGGER = LogManager.getLogger(R2RMLOption.class);

@@ -22,7 +22,7 @@ import java.util.concurrent.Callable;
 @Command(name = "output",
         exitCodeOnInvalidInput = 32,
         exitCodeOnExecutionException = 34,
-        description = "Output command in handling the output of RDF result to persistent storage.")
+        description = "Output command in handling the output of RDF result to persistent.")
 public class OutputOption implements Callable<RDFOutput> {
 
     private static final Logger LOGGER = LogManager.getLogger(OutputOption.class);
@@ -95,7 +95,7 @@ public class OutputOption implements Callable<RDFOutput> {
         private static final String DEFAULT_DIR = "output";
         private static final String DIR_DESC = "Output directory for RDF output. (default: ${DEFAULT-VALUE})";
         private static final String DEFAULT_FORMAT = "NTRIPLES";
-        private static final String FORMAT_DESC = "File format to serialise RDF result. (default: ${DEFAULT-VALUE})";
+        private static final String FORMAT_DESC = "File format to serialise RDF to. (default: ${DEFAULT-VALUE})";
         private static final String DEFAULT_FILENAME = "rdfOutput.nt";
         private static final String FILENAME_DESC = "File name for RDF output. (default: ${DEFAULT-VALUE})";
         @Option(names = {"-d", "--dir"}, defaultValue = DEFAULT_DIR, description = DIR_DESC)
@@ -112,7 +112,7 @@ public class OutputOption implements Callable<RDFOutput> {
     static class FusekiTDB {
         private static final String HOST_DESC = "IP address or host name to connect to Fuseki server.";
         private static final String PORT_DESC = "Port that the Fuseki server is listening to.";
-        private static final String BASE_DESC = "Base name (Dataset) that exists on Fuseki that can be used.";
+        private static final String BASE_DESC = "Base name that exists on Fuseki that can be used.";
         private static final String GRAPH_DESC = "Graph name to upload the mapped RDF result under.";
         @Option(names = {"-h", "--host"}, required = true, description = HOST_DESC)
         private InetAddress host;

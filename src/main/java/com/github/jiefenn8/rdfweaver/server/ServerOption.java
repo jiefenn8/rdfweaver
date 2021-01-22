@@ -24,16 +24,16 @@ import java.util.concurrent.Callable;
         exitCodeOnInvalidInput = 22,
         exitCodeOnExecutionException = 24,
         subcommands = {R2RMLOption.class},
-        description = "Server command in handling the connection to relational database to map.")
+        description = "Server command in handling the connection to relational database.")
 public class ServerOption implements Callable<RelationalSource> {
 
     private static final Logger LOGGER = LogManager.getLogger(ServerOption.class);
     private static final String DRIVER_DESC = "Driver type to connect to specific database vendor.";
-    private static final String HOST_DESC = "IP address or host name to connect to relational database.";
-    private static final String DB_DESC = "Name of database to use (if multiple instances within host.";
+    private static final String HOST_DESC = "IP address or host name to connect to database.";
+    private static final String DB_DESC = "Name of database to use. (If multiple at host)";
     private static final String PORT_DESC = "Port that the relational database is listening to.";
     private static final String USER_DESC = "User/login to access the database as.";
-    private static final String PASS_DESC = "Password to authenticate access with given user/login.";
+    private static final String PASS_DESC = "Password to authenticate with user/login.";
     private final RelationalSource.Builder rdbSourceBuilder;
     @Option(names = {"-d", "--driver"}, required = true, description = DRIVER_DESC)
     private JDBCDriver driver;

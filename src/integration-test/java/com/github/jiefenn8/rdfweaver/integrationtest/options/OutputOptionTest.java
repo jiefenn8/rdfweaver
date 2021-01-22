@@ -72,7 +72,7 @@ public class OutputOptionTest {
     @Test
     public void GivenFilenameParam_WhenExecute_ThenReturnRDFFileWithExpectedFilename() {
         String filename = "filename.nt";
-        String[] args = new String[]{"--filename" + DELIMITER + filename};
+        String[] args = new String[]{"--file" + DELIMITER + filename};
 
         commandLine.execute(args);
         RDFFileSystem file = commandLine.getExecutionResult();
