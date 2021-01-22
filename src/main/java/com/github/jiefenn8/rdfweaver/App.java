@@ -17,6 +17,7 @@ import picocli.CommandLine.RunAll;
 import picocli.CommandLine.Spec;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -69,8 +70,24 @@ public class App implements Callable<Boolean> {
             return true;
         }
         LOGGER.info("SERVER, R2RML and OUTPUT subcommands required. Check the README for usage information.");
-        cmd.usage(cmd.getOut());
+        recursivelyPrintUsage(cmd);
         return false;
+    }
+
+    /**
+     * Recursively print the given commandline and its subcommands' usage
+     * message.
+     *
+     * @param cmd the commandline and its subcommand to print usage
+     */
+    private void recursivelyPrintUsage(CommandLine cmd){
+        PrintWriter writer = cmd.getOut();
+        cmd.getOut().println();
+        LOGGER.info("Printing usage for {}", cmd.getCommandName());
+        cmd.usage(writer);
+        cmd.getSubcommands().forEach((k,v)->{
+            recursivelyPrintUsage(v);
+        });
     }
 
     /**
@@ -112,7 +129,7 @@ public class App implements Callable<Boolean> {
      * @param code the exit code of the command execute method
      * @return true if all prerequisite is met, otherwise false
      */
-    public boolean hasMappingPrerequisite(int code) {
+    private boolean hasMappingPrerequisite(int code) {
         //Handling errors during running all commands.
         if (code != spec.exitCodeOnSuccess()) {
             LOGGER.debug("Received error code {} from running all commands.", code);
