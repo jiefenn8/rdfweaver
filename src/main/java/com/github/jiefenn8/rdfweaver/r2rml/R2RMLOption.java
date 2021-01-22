@@ -26,7 +26,7 @@ public class R2RMLOption implements Callable<R2RMLMap> {
     private static final Logger LOGGER = LogManager.getLogger(R2RMLOption.class);
     private final R2RMLBuilder builder;
     @Option(names = {"-f", "--file"}, required = true, description = "Location and filename of the R2RML file.")
-    private final File r2rmlFile = new File(StringUtils.EMPTY);
+    private final File filename = new File(StringUtils.EMPTY);
     @Spec private CommandSpec spec;
 
     /**
@@ -50,13 +50,13 @@ public class R2RMLOption implements Callable<R2RMLMap> {
     @Override
     public R2RMLMap call() {
         CommandLine cmd = spec.commandLine();
-        String path = r2rmlFile.getPath();
+        String path = filename.getPath();
         try {
-            if (!r2rmlFile.isFile()) {
+            if (!filename.isFile()) {
                 String message = String.format("%s not found.", path);
                 throw new NotFoundException(message);
             }
-            R2RMLMap r2rmlMap = builder.parse(r2rmlFile.getPath());
+            R2RMLMap r2rmlMap = builder.parse(filename.getPath());
             int mapSize = r2rmlMap.getEntityMaps().size();
             LOGGER.info("Loading R2RML file completed, {} TriplesMaps found.", mapSize);
             return r2rmlMap;

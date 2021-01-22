@@ -99,11 +99,11 @@ public class AppTest {
 
         //Output params
         String fHost = RDB_HOST;
-        String fusekiHost = "--host" + DELIMITER + fHost; //Should be in the same local machine (TravisCI).
+        String fusekiHost = "--host" + DELIMITER + fHost;
         int fPort = 3030;
         String fusekiPort = "--port" + DELIMITER + fPort;
         String fBase = "ds";
-        String fusekiBase = "--baseName" + DELIMITER + fBase;
+        String fusekiBase = "--base" + DELIMITER + fBase;
 
         //Full arg array assembly
         String[] args = new String[]{

@@ -38,15 +38,15 @@ public class ServerOption implements Callable<RelationalSource> {
     @Option(names = {"-d", "--driver"}, required = true, description = DRIVER_DESC)
     private JDBCDriver driver;
     @Option(names = {"-h", "--host"}, required = true, description = HOST_DESC)
-    private InetAddress host;
-    @Option(names = {"-db", "--database"}, defaultValue = "", description = DB_DESC)
-    private String database;
+    private InetAddress address;
+    @Option(names = {"-n", "--database"}, defaultValue = "", description = DB_DESC)
+    private String dbName;
     @Option(names = {"-p", "--port"}, required = true, description = PORT_DESC)
     private int port;
     @Option(names = {"-u", "--user"}, required = true, description = USER_DESC)
-    private String user;
-    @Option(names = {"-pw", "--pass"}, required = true, description = PASS_DESC, interactive = true)
-    private char[] pass;
+    private String username;
+    @Option(names = {"-k", "--pass"}, required = true, description = PASS_DESC, interactive = true)
+    private char[] password;
     @Spec private CommandSpec spec;
 
     /**
@@ -74,11 +74,11 @@ public class ServerOption implements Callable<RelationalSource> {
         try {
             LOGGER.info("Connecting to database...");
             RelationalSource source = rdbSourceBuilder.newInstance()
-                    .serverHost(driver, host, port)
-                    .credential(user, pass)
-                    .database(database)
+                    .serverHost(driver, address, port)
+                    .credential(username, password)
+                    .database(dbName)
                     .build();
-            LOGGER.info("Connection to database '{}:{}' as '{}' established.", host.getHostName(), port, user);
+            LOGGER.info("Connection to database '{}:{}' as '{}' established.", address.getHostName(), port, username);
             return source;
         } catch (HikariPool.PoolInitializationException ex) {
             String msg = "Server exception occurred during connection attempt.";
@@ -96,7 +96,7 @@ public class ServerOption implements Callable<RelationalSource> {
             cmd.getOut().println(msg);
             throw new ExecutionException(cmd, msg, ex);
         } finally {
-            Arrays.fill(pass, '*');
+            Arrays.fill(password, '*');
         }
     }
 
@@ -111,7 +111,7 @@ public class ServerOption implements Callable<RelationalSource> {
         int code = ex.getErrorCode();
         switch (code) {
             case 18456:
-                msg = "Server error: Login for '" + user + "' failed to access database.";
+                msg = "Server error: Login for '" + username + "' failed to access database.";
                 break;
             case 0:
             default:
@@ -133,7 +133,7 @@ public class ServerOption implements Callable<RelationalSource> {
         String state = ex.getSQLState();
         switch (state) {
             case "08S01": {
-                msg = "Server error: " + driver.toString() + " host " + host.getHostName() + ", port " + port
+                msg = "Server error: " + driver.toString() + " host " + address.getHostName() + ", port " + port
                         + " couldn't be reached.";
                 break;
             }

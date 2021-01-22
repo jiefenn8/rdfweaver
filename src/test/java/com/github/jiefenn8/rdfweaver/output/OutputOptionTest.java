@@ -137,9 +137,9 @@ public class OutputOptionTest {
     }
 
     @Test
-    public void GivenFilenameParam_WhenExecute_ThenReturnRDFFileWithExpectedFilename() throws Exception {
+    public void GivenFileParam_WhenExecute_ThenReturnRDFFileWithExpectedFilename() throws Exception {
         String filename = "filename.nt";
-        String[] args = new String[]{"--filename" + DELIMITER + filename};
+        String[] args = new String[]{"--file" + DELIMITER + filename};
         RDFFileSystem mockRDFFileSystem = mock(RDFFileSystem.class);
         when(mockRDFFileSystem.getName()).thenReturn(filename);
         when(mockRDFOutputFactory.createFileSystem(any(Path.class), anyString(), any(RDFFormat.class)))
@@ -152,7 +152,7 @@ public class OutputOptionTest {
 
     @Test
     public void GivenFusekiTDBReqParams_WhenExecute_ThenReturnCode_0() throws Exception {
-        String[] args = new String[]{"--host=localhost", "--port=3030", "--baseName=ds"};
+        String[] args = new String[]{"--host=localhost", "--port=3030", "--base=ds"};
         FusekiTDBRemote.Builder mockBuilder = mock(FusekiTDBRemote.Builder.class, RETURNS_MOCKS);
         when(mockRDFOutputFactory.createFusekiBuilder(any(InetAddress.class), anyInt(), anyString()))
                 .thenReturn(mockBuilder);

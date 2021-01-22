@@ -59,7 +59,7 @@ public class OutputOption implements Callable<RDFOutput> {
         try {
             RDFOutput output;
             if (fuseki != null) {
-                InetAddress host = fuseki.host;
+                InetAddress host = fuseki.address;
                 int port = fuseki.port;
                 output = rdfOutputFactory.createFusekiBuilder(host, port, fuseki.baseName)
                         .graphName(fuseki.graphName)
@@ -100,7 +100,7 @@ public class OutputOption implements Callable<RDFOutput> {
         private static final String FILENAME_DESC = "File name for RDF output. (default: ${DEFAULT-VALUE})";
         @Option(names = {"-d", "--dir"}, defaultValue = DEFAULT_DIR, description = DIR_DESC)
         private File path;
-        @Option(names = {"-n", "--filename"}, defaultValue = DEFAULT_FILENAME, description = FILENAME_DESC)
+        @Option(names = {"-n", "--file"}, defaultValue = DEFAULT_FILENAME, description = FILENAME_DESC)
         private String filename;
         @Option(names = {"-f", "--format"}, defaultValue = DEFAULT_FORMAT, description = FORMAT_DESC)
         private RDFFileFormat format;
@@ -115,12 +115,12 @@ public class OutputOption implements Callable<RDFOutput> {
         private static final String BASE_DESC = "Base name that exists on Fuseki that can be used.";
         private static final String GRAPH_DESC = "Graph name to upload the mapped RDF result under.";
         @Option(names = {"-h", "--host"}, required = true, description = HOST_DESC)
-        private InetAddress host;
+        private InetAddress address;
         @Option(names = {"-p", "--port"}, required = true, description = PORT_DESC)
         private int port;
-        @Option(names = {"-b", "--baseName"}, required = true, description = BASE_DESC)
+        @Option(names = {"-b", "--base"}, required = true, description = BASE_DESC)
         private String baseName;
-        @Option(names = {"-g", "--graphName"}, description = GRAPH_DESC)
+        @Option(names = {"-g", "--graph"}, description = GRAPH_DESC)
         private String graphName;
     }
 }
