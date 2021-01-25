@@ -1,6 +1,6 @@
 package com.github.jiefenn8.rdfweaver.integrationtest.options;
 
-import com.github.jiefenn8.rdfweaver.App;
+import com.github.jiefenn8.rdfweaver.RDFWeaver;
 import com.github.jiefenn8.rdfweaver.server.JDBCDriver;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.jena.query.ResultSet;
@@ -23,7 +23,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * Integration test class for {@code App}.
  */
-public class AppTest {
+public class RDFWeaverTest {
 
     private static final String DELIMITER = "=";
 
@@ -47,12 +47,12 @@ public class AppTest {
     private static final String RDB_PASS = "YourStrong@Passw0rd";
     private static final String RDB_DB = "testDb";
     
-    private App app;
+    private RDFWeaver RDFWeaver;
     private Path expectedOutput;
 
     @Before
     public void setUp() {
-        app = new App();
+        RDFWeaver = new RDFWeaver();
         expectedOutput = Paths.get("output/rdfOutput.nt").toAbsolutePath();
     }
 
@@ -78,7 +78,7 @@ public class AppTest {
         //Full arg array assembly
         String[] args = new String[]{"server", driver, db, host, port, user, pass, "r2rml", r2rml, "output"};
 
-        app.start(args);
+        RDFWeaver.init(args);
         boolean result = Files.exists(expectedOutput);
         assertThat(result, is(true));
     }
@@ -112,7 +112,7 @@ public class AppTest {
                 "output", fusekiHost, fusekiPort, fusekiBase
         };
 
-        app.start(args);
+        RDFWeaver.init(args);
         String connStr = new URIBuilder()
                 .setScheme("http")
                 .setHost(fHost)
@@ -139,7 +139,7 @@ public class AppTest {
     @Test
     public void GivenVersionCommand_WhenExecute_ThenCompleteRun(){
         String[] args = new String[] {"--version"};
-        int result = app.start(args);
+        int result = RDFWeaver.init(args);
         assertThat(result, is(0));
     }
 
@@ -147,7 +147,7 @@ public class AppTest {
     @Test
     public void GivenHelpCommand_WhenExecute_ThenCompleteRun(){
         String[] args = new String[] {"--help"};
-        int result = app.start(args);
+        int result = RDFWeaver.init(args);
         assertThat(result, is(0));
     }
 }

@@ -27,9 +27,9 @@ import java.util.concurrent.Callable;
 @Command(mixinStandardHelpOptions = true,
         synopsisSubcommandLabel = "COMMAND",
         version = "0.1.0")
-public class App implements Callable<Boolean> {
+public class RDFWeaver implements Callable<Boolean> {
 
-    private static final Logger LOGGER = LogManager.getLogger(App.class);
+    private static final Logger LOGGER = LogManager.getLogger(RDFWeaver.class);
     private final RDFMapper rdfMapper;
     private final ServerOption serverOption;
     @Spec private CommandSpec spec;
@@ -38,7 +38,7 @@ public class App implements Callable<Boolean> {
     /**
      * Constructs an App instance with default {@link RDFMapper}.
      */
-    public App() {
+    public RDFWeaver() {
         cmd = new CommandLine(this);
         rdfMapper = new RDFMapper();
         serverOption = new ServerOption();
@@ -50,7 +50,7 @@ public class App implements Callable<Boolean> {
      * @param rdfMapper    the mapper to use
      * @param serverOption the subcommand to use
      */
-    public App(@NonNull RDFMapper rdfMapper, @NonNull ServerOption serverOption) {
+    public RDFWeaver(@NonNull RDFMapper rdfMapper, @NonNull ServerOption serverOption) {
         cmd = new CommandLine(this);
         this.rdfMapper = rdfMapper;
         this.serverOption = serverOption;
@@ -96,7 +96,7 @@ public class App implements Callable<Boolean> {
      * @param args the arguments to execute the program with
      * @return exit code of the program
      */
-    public int start(@NonNull String... args) {
+    public int init(@NonNull String... args) {
         LOGGER.info("Starting RDFWeaver...");
         cmd.addSubcommand(serverOption);
         cmd.setExecutionStrategy(new RunAll());
