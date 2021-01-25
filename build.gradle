@@ -9,7 +9,7 @@ plugins {
 }
 
 group 'com.github.jiefenn8.rdfweaver'
-archivesBaseName = 'rdfweaver-console'
+archivesBaseName = 'rdfweaver-cli'
 description = 'RDFWeaver console - multi-media to semantic graph mapping application.'
 
 version '0.1.0-SNAPSHOT'
