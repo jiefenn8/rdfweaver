@@ -93,15 +93,15 @@ java rdfweaver-console-x.x.x.jar server <server args> r2rml <r2rml args> output 
 (-h, --host) Database host URL
 (-p, --port) Database host port
 (-u, --user) Login to access database
-(-pw, --password) Password for login
+(-k, --pass) Password for login
 ```
 **Optional:**
 ```
-(-db, --database) Database to use within a host (if multiple instances exist)
+(-n, --database) Database to use within a host (if multiple instances exist)
 ```
 Example: 
 ```
-server --driver=MSSQL --host=192.168.1.1 --port=1433 --user=sa --password=YourStrong@Passw0rd --database=MyDatabase01
+server --driver=MSSQL --host=192.168.1.1 --port=1433 --user=sa --pass=YourStrong@Passw0rd --database=MyDatabase01
 ```
 
 #### R2RML Subcommand (--r2rml):
@@ -121,7 +121,7 @@ For file output:
 **Optional:**
 ```
 (-d, --dir) File output directory (default: /output in RDFWeaver directory)
-(-n, --name) File output name (default: rdfOutput.ttl)
+(-n, --file) File output name (default: rdfOutput.ttl)
 (-f, --format) File format to output the RDF triples as (Default: NTRIPLES) 
 ```
 Example: 
@@ -135,15 +135,15 @@ For Fuseki database output:
 ```
 (-h, --host) Fuseki database host URL 
 (-p, --port) Fuseki database host port
-(-b, --baseName) Fuseki database endpoint base name
+(-b, --base) Fuseki database endpoint base name
 ```
 **Optional:**
 ```
-(-g, --graphName) Fuseki database graph name to upload RDF data under
+(-g, --graph) Fuseki database graph name to upload RDF data under
 ```
 Example: 
 ```
-output --host=192.168.1.1 --port=8080 --baseName=ds --graphName=default
+output --host=192.168.1.1 --port=8080 --base=ds --graph=default
 ```
 
 ## More information
