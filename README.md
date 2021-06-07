@@ -3,11 +3,9 @@
 A Java application implementation of a multi-media data source to RDF Graph converter.
 
 [![Build Status](https://travis-ci.org/jiefenn8/rdfweaver.svg?branch=master)](https://travis-ci.org/jiefenn8/rdfweaver)
-[![codecov](https://codecov.io/gh/jiefenn8/rdfweaver/branch/master/graph/badge.svg)](https://codecov.io/gh/jiefenn8/rdfweaver)
 [![Apache 2.0 License](https://img.shields.io/badge/license-apache2-green.svg) ](https://github.com/jiefenn8/rdfweaver/blob/master/LICENSE.md)
 
 [![Release](https://img.shields.io/github/v/release/jiefenn8/rdfweaver)](https://github.com/jiefenn8/rdfweaver/releases/latest)
-[![Bintray](https://img.shields.io/bintray/v/jiefenn8/rdfweaver/rdfweaver)](https://bintray.com/jiefenn8/rdfweaver/rdfweaver/_latestVersion)
 
 ## Description
 
@@ -27,50 +25,7 @@ the appropriate runtime environment.
 
 ### Downloading RDFWeaver
 
-For each release, a zip containing the RDFWeaver fat JAR binary will be uploaded as well for immediate usage.
-However, if you want to obtain just the artifact without the dependencies; download from the Bintray badge above or
-add the following to the build settings.
-
-#### Maven
-
-Repository:
-```
-<repository>
-    <snapshots>
-        <enabled>false</enabled>
-    </snapshots>
-    <id>bintray-jiefenn8-rdfweaver</id>
-    <name>bintray</name>
-    <url>https://dl.bintray.com/jiefenn8/rdfweaver</url>
-</repository>
-```
-
-Dependency:
-```
-<dependency>
-  <groupId>com.github.jiefenn8.rdfweaver</groupId>
-  <artifactId>rdfweaver-cli</artifactId>
-  <version>0.1.0</version>
-</dependency>
-```
-
-#### Gradle
-
-Repository:
-```
-repositories {
-    maven {
-        url  "https://dl.bintray.com/jiefenn8/rdfweaver" 
-    }
-}
-```
-
-Dependency:
-```
-dependencies {
-  implementation 'com.github.jiefenn8.rdfweaver:rdfweaver-cli:0.1.0'
-}
-```
+TBD
 
 ### Usage example
 
