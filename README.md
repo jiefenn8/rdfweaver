@@ -7,6 +7,8 @@ A Java application implementation of a multi-media data source to RDF Graph conv
 
 [![Release](https://img.shields.io/github/v/release/jiefenn8/rdfweaver)](https://github.com/jiefenn8/rdfweaver/releases/latest)
 
+```Work on this project is on pause until GraphLoom dependency issues has been resolved. 9/06/2021```
+
 ## Description
 
 A Java application implementation of a multi-media data source to RDF Graph converter using the 
