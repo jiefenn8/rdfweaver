@@ -16,6 +16,9 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
+/**
+ * Unit test class for {@link SQLAdapter}.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class SQLAdapterTest extends TestCase {
 

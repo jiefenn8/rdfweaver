@@ -29,7 +29,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit test class for {@code OutputOption}.
+ * Unit test class for {@link OutputOption}.
  */
 @RunWith(JUnitParamsRunner.class)
 public class OutputOptionTest {

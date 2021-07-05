@@ -21,7 +21,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * Integration test class for {@code App}.
+ * Integration test class for {@link RDFWeaver}.
  */
 public class RDFWeaverTest {
 
