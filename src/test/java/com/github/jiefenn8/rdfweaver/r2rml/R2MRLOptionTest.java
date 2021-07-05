@@ -1,10 +1,10 @@
 package com.github.jiefenn8.rdfweaver.r2rml;
 
-import com.github.jiefenn8.graphloom.api.EntityMap;
-import com.github.jiefenn8.graphloom.rdf.parser.R2RMLBuilder;
-import com.github.jiefenn8.graphloom.rdf.r2rml.R2RMLMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import io.github.jiefenn8.graphloom.api.EntityMap;
+import io.github.jiefenn8.graphloom.rdf.parser.R2RMLBuilder;
+import io.github.jiefenn8.graphloom.rdf.r2rml.R2RMLMap;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.apache.jena.n3.turtle.TurtleParseException;
