@@ -46,7 +46,7 @@ public class RDFWeaverTest {
     private static final String RDB_USER = "sa";
     private static final String RDB_PASS = "YourStrong@Passw0rd";
     private static final String RDB_DB = "testDb";
-    
+
     private RDFWeaver RDFWeaver;
     private Path expectedOutput;
 
@@ -137,16 +137,16 @@ public class RDFWeaverTest {
 
     //Check if running version command does not encounter exception.
     @Test
-    public void GivenVersionCommand_WhenExecute_ThenCompleteRun(){
-        String[] args = new String[] {"--version"};
+    public void GivenVersionCommand_WhenExecute_ThenCompleteRun() {
+        String[] args = new String[]{"--version"};
         int result = RDFWeaver.init(args);
         assertThat(result, is(0));
     }
 
     //Check if running help command does not encounter exception.
     @Test
-    public void GivenHelpCommand_WhenExecute_ThenCompleteRun(){
-        String[] args = new String[] {"--help"};
+    public void GivenHelpCommand_WhenExecute_ThenCompleteRun() {
+        String[] args = new String[]{"--help"};
         int result = RDFWeaver.init(args);
         assertThat(result, is(0));
     }

@@ -1,11 +1,11 @@
 package com.github.jiefenn8.rdfweaver.integrationtest.options;
 
-import com.github.jiefenn8.graphloom.api.InputSource;
 import com.github.jiefenn8.rdfweaver.server.JDBCDriver;
 import com.github.jiefenn8.rdfweaver.server.ServerOption;
 import com.google.common.collect.ImmutableList;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import io.github.jiefenn8.graphloom.api.InputSource;
 import junitparams.JUnitParamsRunner;
 import org.junit.After;
 import org.junit.Before;

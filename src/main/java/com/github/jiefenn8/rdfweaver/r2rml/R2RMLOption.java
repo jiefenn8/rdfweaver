@@ -1,8 +1,8 @@
 package com.github.jiefenn8.rdfweaver.r2rml;
 
-import com.github.jiefenn8.graphloom.rdf.parser.R2RMLBuilder;
-import com.github.jiefenn8.graphloom.rdf.r2rml.R2RMLMap;
 import com.github.jiefenn8.rdfweaver.output.OutputOption;
+import io.github.jiefenn8.graphloom.rdf.parser.R2RMLBuilder;
+import io.github.jiefenn8.graphloom.rdf.r2rml.R2RMLMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.n3.turtle.TurtleParseException;
 import org.apache.jena.shared.NotFoundException;

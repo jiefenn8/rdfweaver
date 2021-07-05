@@ -1,9 +1,9 @@
 package com.github.jiefenn8.rdfweaver.integrationtest.options;
 
-import com.github.jiefenn8.graphloom.rdf.parser.R2RMLBuilder;
-import com.github.jiefenn8.graphloom.rdf.r2rml.R2RMLMap;
 import com.github.jiefenn8.rdfweaver.r2rml.R2RMLOption;
 import com.google.common.collect.ImmutableList;
+import io.github.jiefenn8.graphloom.rdf.parser.R2RMLBuilder;
+import io.github.jiefenn8.graphloom.rdf.r2rml.R2RMLMap;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Before;
