@@ -38,7 +38,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Login Docker
-      run: echo "{{$secrets.DOCKER_TOKEN}}" | docker login -u "{{$DOCKER_USERNAME"}} --password-stdin
+      run: echo "{{$secrets.DOCKER_TOKEN}}" | docker login -u "{{$DOCKER_USERNAME}}" --password-stdin
     - name: Setup SQL Server
       run: |
         chmod +x script/docker_mssql_setup_script.sh
