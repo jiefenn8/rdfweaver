@@ -14,7 +14,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 /**
- * Unit test class for {@code FileResolver}.
+ * Unit test class for {@link FileResolver}.
  */
 public class FileResolverTest {
 

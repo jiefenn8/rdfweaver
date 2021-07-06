@@ -1,5 +1,6 @@
 package com.github.jiefenn8.rdfweaver.server;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,6 +21,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+/**
+ * Unit test class for {@link RelationalSource}.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class RelationalSourceTest {
 
@@ -33,7 +37,6 @@ public class RelationalSourceTest {
     private static final String TEST_USER = "test_user";
     private static final String TEST_PASS = "test_pass";
 
-    @Rule public final ExpectedException expectedException = ExpectedException.none();
     @Mock private DataSourceFactory mockDataSourceFactory;
     @Mock private InetAddress mockAddress;
     private RelationalSource.Builder relationalSourceBuilder;
@@ -58,10 +61,14 @@ public class RelationalSourceTest {
     @Test
     public void GivenInvalidParams_WhenBuild_ThenThrowException() {
         when(mockDataSourceFactory.getDataSource(any(Properties.class))).thenThrow(RuntimeException.class);
-        expectedException.expect(Exception.class);
-        relationalSourceBuilder.newInstance()
-                .serverHost(TEST_DRIVER, mockAddress, -1)
-                .credential(TEST_USER, TEST_PASS.toCharArray())
-                .build();
+        Assert.assertThrows(
+                Exception.class,
+                ()-> {
+                    relationalSourceBuilder.newInstance()
+                            .serverHost(TEST_DRIVER, mockAddress, -1)
+                            .credential(TEST_USER, TEST_PASS.toCharArray())
+                            .build();
+                }
+        );
     }
 }

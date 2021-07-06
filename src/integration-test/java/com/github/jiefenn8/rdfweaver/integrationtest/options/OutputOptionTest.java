@@ -20,7 +20,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * Integration test class for {@code OutputOption}.
+ * Integration test class for {@link OutputOption}.
  */
 @RunWith(JUnitParamsRunner.class)
 public class OutputOptionTest {

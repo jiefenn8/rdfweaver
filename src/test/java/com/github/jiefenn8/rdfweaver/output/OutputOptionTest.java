@@ -3,7 +3,6 @@ package com.github.jiefenn8.rdfweaver.output;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.apache.jena.riot.RDFFormat;
-import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -26,12 +25,11 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit test class for {@code OutputOption}.
+ * Unit test class for {@link OutputOption}.
  */
 @RunWith(JUnitParamsRunner.class)
 public class OutputOptionTest {

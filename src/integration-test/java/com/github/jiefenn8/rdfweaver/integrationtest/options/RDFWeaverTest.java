@@ -5,6 +5,8 @@ import com.github.jiefenn8.rdfweaver.server.JDBCDriver;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdfconnection.RDFConnection;
 import org.apache.jena.rdfconnection.RDFConnectionFactory;
@@ -21,7 +23,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * Integration test class for {@code App}.
+ * Integration test class for {@link RDFWeaver}.
  */
 public class RDFWeaverTest {
 
@@ -46,7 +48,8 @@ public class RDFWeaverTest {
     private static final String RDB_USER = "sa";
     private static final String RDB_PASS = "YourStrong@Passw0rd";
     private static final String RDB_DB = "testDb";
-    
+    private static final String FUSEKI_HOST = "127.0.0.1";
+
     private RDFWeaver RDFWeaver;
     private Path expectedOutput;
 
@@ -79,8 +82,9 @@ public class RDFWeaverTest {
         String[] args = new String[]{"server", driver, db, host, port, user, pass, "r2rml", r2rml, "output"};
 
         RDFWeaver.init(args);
-        boolean result = Files.exists(expectedOutput);
-        assertThat(result, is(true));
+        Model result = ModelFactory.createDefaultModel();
+        result.read(expectedOutput.toString(), "TURTLE");
+        assertThat(result.size(), is(2L));
     }
 
     @Test
@@ -98,7 +102,7 @@ public class RDFWeaverTest {
         String r2rml = "--file=" + r2rmlFile;
 
         //Output params
-        String fHost = RDB_HOST;
+        String fHost = FUSEKI_HOST;
         String fusekiHost = "--host" + DELIMITER + fHost;
         int fPort = 3030;
         String fusekiPort = "--port" + DELIMITER + fPort;
@@ -137,16 +141,16 @@ public class RDFWeaverTest {
 
     //Check if running version command does not encounter exception.
     @Test
-    public void GivenVersionCommand_WhenExecute_ThenCompleteRun(){
-        String[] args = new String[] {"--version"};
+    public void GivenVersionCommand_WhenExecute_ThenCompleteRun() {
+        String[] args = new String[]{"--version"};
         int result = RDFWeaver.init(args);
         assertThat(result, is(0));
     }
 
     //Check if running help command does not encounter exception.
     @Test
-    public void GivenHelpCommand_WhenExecute_ThenCompleteRun(){
-        String[] args = new String[] {"--help"};
+    public void GivenHelpCommand_WhenExecute_ThenCompleteRun() {
+        String[] args = new String[]{"--help"};
         int result = RDFWeaver.init(args);
         assertThat(result, is(0));
     }
