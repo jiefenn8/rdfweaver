@@ -41,7 +41,7 @@ jobs:
           - "1433:1433"
         volumes: 
           - script:/script
-        options: --name sql1 -it sql1 /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P YourStrong@Passw0rd -i /script/sqlserver_test_db.sql
+        options: -it /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P YourStrong@Passw0rd -i /script/sqlserver_test_db.sql
       fuseki:
         image: stain/jena-fuseki
         credentials:
