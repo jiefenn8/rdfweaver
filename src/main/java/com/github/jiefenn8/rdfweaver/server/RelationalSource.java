@@ -64,9 +64,7 @@ public class RelationalSource implements InputSource {
         try (ResultSet results = stmt.executeQuery(query)) {
             LOGGER.debug("Applying actions to query results.");
             EntityResult entityResult = new SQLAdapter(results);
-            while (entityResult.hasNext()) {
-                action.accept(entityResult);
-            }
+            action.accept(entityResult);
         }
     }
 

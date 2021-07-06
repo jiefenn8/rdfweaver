@@ -10,10 +10,12 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -22,60 +24,68 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class SQLAdapterTest extends TestCase {
 
-    @Mock
-    private ResultSet mockResultSet;
-    private SQLAdapter SQLAdapter;
+    @Mock private ResultSet mockResultSet;
+    @Mock private ResultSetMetaData mockMetaData;
+    private SQLAdapter sqlAdapter;
 
     @Before
-    public void SetUp() {
-        SQLAdapter = new SQLAdapter(mockResultSet);
+    public void SetUp() throws Exception {
+        when(mockResultSet.getMetaData()).thenReturn(mockMetaData);
+        sqlAdapter = new SQLAdapter(mockResultSet);
     }
 
     @Test
     public void GivenResultSetHasNext_WhenHasNext_ThenReturnTrue() throws Exception {
-        when(mockResultSet.isAfterLast()).thenReturn(false);
-        boolean result = SQLAdapter.hasNext();
+        when(mockResultSet.next()).thenReturn(true);
+        boolean result = sqlAdapter.hasNext();
         assertThat(result, is(true));
     }
 
     @Test
     public void GivenResultSetHasNoNext_WhenHasNext_ThenReturnFalse() throws Exception {
-        when(mockResultSet.isAfterLast()).thenReturn(true);
-        boolean result = SQLAdapter.hasNext();
+        when(mockResultSet.next()).thenReturn(false);
+        boolean result = sqlAdapter.hasNext();
         assertThat(result, is(false));
     }
 
     @Test
     public void GivenResultSetHasException_WhenHasNext_ThenThrowRuntimeException() throws Exception {
-        when(mockResultSet.isAfterLast()).thenThrow(SQLException.class);
+        when(mockResultSet.next()).thenThrow(SQLException.class);
         Assert.assertThrows(
                 RuntimeException.class,
-                () -> SQLAdapter.hasNext()
+                () -> sqlAdapter.hasNext()
         );
     }
 
     @Test
-    public void GivenResultSetHasEntity_WhenNextEntity_ThenReturnEntity() {
-        Entity result = SQLAdapter.nextEntity();
-        assertThat(result, instanceOf(Entity.class));
+    public void GivenResultSet_WhenNextEntity_ThenReturnThis() {
+        Entity result = sqlAdapter.nextEntity();
+        assertThat(result, instanceOf(SQLAdapter.class));
     }
 
     @Test
-    public void GivenPropertyName_WhenGetPropertyValue_ThenReturnExpected() throws Exception {
+    public void GivenValidPropertyName_WhenGetPropertyValue_ThenReturnExpected() throws Exception {
         String property = "PROPERTY";
         String expected = "VALUE";
-        when(mockResultSet.getString(property)).thenReturn(expected);
-        String result = SQLAdapter.getPropertyValue(property);
+        (when(mockMetaData.getColumnCount())).thenReturn(2);
+        when(mockMetaData.getColumnName(2)).thenReturn(property);
+        when(mockResultSet.getString(2)).thenReturn(expected);
+        sqlAdapter.nextEntity();
+        String result = sqlAdapter.getPropertyValue(property);
         assertThat(result, is(equalTo(expected)));
     }
 
     @Test
-    public void GivenInvalidPropertyName_WhenGetPropertyValue_ThenThrowRuntimeException() throws Exception {
-        when(mockResultSet.getString(null)).thenThrow(SQLException.class);
-        Assert.assertThrows(
-                RuntimeException.class,
-                () -> SQLAdapter.getPropertyValue(null)
-        );
+    public void GivenPropertyNameBeforeFirst_WhenGetPropertyValue_ThenReturnNull() throws Exception {
+        String property = "PROPERTY";
+        String result = sqlAdapter.getPropertyValue(property);
+        assertThat(result, is(nullValue()));
+    }
+
+    @Test
+    public void GivenInvalidPropertyName_WhenGetPropertyValue_ThenReturnNull() throws Exception {
+        String result = sqlAdapter.getPropertyValue(null);
+        assertThat(result, is(nullValue()));
     }
 
 }
