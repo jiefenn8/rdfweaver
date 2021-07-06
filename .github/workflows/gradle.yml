@@ -28,6 +28,29 @@ jobs:
         
   integration:
     runs-on: ubuntu-latest
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        credentials:
+          username: ${{secrets.DOCKER_USERNAME}}
+          password: ${{secrets.DOCKER_TOKEN}}
+        env:
+          SA_PASSWORD: YourStrong@Passw0rd
+          ACCEPT_EULA: Y
+        ports: 
+          - "1433:1433"
+        volumes: 
+          - script:/script
+        options: -it sql1 /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P YourStrong@Passw0rd -i /script/sqlserver_test_db.sql
+      fuseki:
+        image: stain/jena-fuseki
+        credentials:
+          username: ${{secrets.DOCKER_USERNAME}}
+          password: ${{secrets.DOCKER_TOKEN}}
+        env: 
+          FUSEKI_DATASET_1: ds
+        ports:
+          - "3030:3030"
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 15
@@ -37,14 +60,6 @@ jobs:
         distribution: 'adopt'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Setup SQL Server
-      run: |
-        chmod +x script/docker_mssql_setup_script.sh
-        ./script/docker_mssql_setup_script.sh
-    - name: Setup Setup Fuseki server
-      run: |
-        chmod +x script/docker_fuseki_setup_script.sh
-        ./script/docker_fuseki_setup_script.sh
     - name: Build and run integration test (e2e) with Gradle
       run: ./gradlew integrationTest        
     - name: Upload integration test coverage to Codecov
