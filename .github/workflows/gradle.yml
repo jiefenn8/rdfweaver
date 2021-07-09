@@ -40,8 +40,8 @@ jobs:
         ports: 
           - "1433:1433"
         volumes: 
-          - script:/script
-        options: -it /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P YourStrong@Passw0rd -i /script/sqlserver_test_db.sql
+          - ${{github.workspace}}/script:/script
+        options: --name sql1
       fuseki:
         image: stain/jena-fuseki
         credentials:
@@ -60,6 +60,10 @@ jobs:
         distribution: 'adopt'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+    - name: Restart container to rebind volume
+      run: docker restart sql1
+    - name: Load SQL database test data
+      run : docker exec -i sql1 /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P YourStrong@Passw0rd -i /script/sqlserver_test_db.sql
     - name: Build and run integration test (e2e) with Gradle
       run: ./gradlew integrationTest        
     - name: Upload integration test coverage to Codecov
