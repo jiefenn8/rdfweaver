@@ -13,7 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 
 /**
- * Unit test class for {@code RDFFileFactory}.
+ * Unit test class for {@link RDFOutputFactory}.
  */
 public class RDFOutputFactoryTest {
 

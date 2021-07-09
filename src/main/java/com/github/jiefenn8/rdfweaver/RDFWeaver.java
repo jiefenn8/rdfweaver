@@ -1,10 +1,10 @@
 package com.github.jiefenn8.rdfweaver;
 
-import com.github.jiefenn8.graphloom.api.ConfigMaps;
-import com.github.jiefenn8.graphloom.api.InputSource;
-import com.github.jiefenn8.graphloom.rdf.RDFMapper;
 import com.github.jiefenn8.rdfweaver.output.RDFOutput;
 import com.github.jiefenn8.rdfweaver.server.ServerOption;
+import io.github.jiefenn8.graphloom.api.ConfigMaps;
+import io.github.jiefenn8.graphloom.api.InputSource;
+import io.github.jiefenn8.graphloom.rdf.RDFMapper;
 import org.apache.jena.rdf.model.Model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -80,12 +80,12 @@ public class RDFWeaver implements Callable<Boolean> {
      *
      * @param cmd the commandline and its subcommand to print usage
      */
-    private void recursivelyPrintUsage(CommandLine cmd){
+    private void recursivelyPrintUsage(CommandLine cmd) {
         PrintWriter writer = cmd.getOut();
         cmd.getOut().println();
         LOGGER.info("Printing usage for {}", cmd.getCommandName());
         cmd.usage(writer);
-        cmd.getSubcommands().forEach((k,v)->{
+        cmd.getSubcommands().forEach((k, v) -> {
             recursivelyPrintUsage(v);
         });
     }

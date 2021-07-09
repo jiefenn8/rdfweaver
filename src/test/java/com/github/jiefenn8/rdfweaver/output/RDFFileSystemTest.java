@@ -16,7 +16,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * Unit test class for {@code RDFFile}.
+ * Unit test class for {@link RDFFileSystem}.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class RDFFileSystemTest {
