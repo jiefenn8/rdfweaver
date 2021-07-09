@@ -1,19 +1,21 @@
 # RDFWeaver
 
-A Java application implementation of a multi-media data source to RDF Graph converter.
+A Java CLI test implementation of a relational multi-media data source to RDF Graph converter.
 
-[![Build Status](https://travis-ci.org/jiefenn8/rdfweaver.svg?branch=master)](https://travis-ci.org/jiefenn8/rdfweaver)
-[![Apache 2.0 License](https://img.shields.io/badge/license-apache2-green.svg) ](https://github.com/jiefenn8/rdfweaver/blob/master/LICENSE.md)
+[![CI](https://github.com/jiefenn8/rdfweaver/workflows/CI/badge.svg)](https://github.com/jiefenn8/rdfweaver/actions?query=workflow%3ACI)[![codecov](https://codecov.io/gh/jiefenn8/rdfweaver/branch/master/graph/badge.svg)](https://codecov.io/gh/jiefenn8/rdfweaver)[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](./LICENSE.md)
 
 [![Release](https://img.shields.io/github/v/release/jiefenn8/rdfweaver)](https://github.com/jiefenn8/rdfweaver/releases/latest)
 
-```Work on this project is on pause until GraphLoom dependency issues has been resolved. 9/06/2021```
+```
+9/07/2021
+With the restoration of GraphLoom library dependency from v0.5.x . 
+Development of this project has resumed and will be overhauled in future updates. 
+```
 
 ## Description
 
-A Java application implementation of a multi-media data source to RDF Graph converter using the 
-[GraphLoom](https://github.com/jiefenn8/graphloom) library. Targeted to initially convert a relational database to RDF 
-semantic graph with later targets in the roadmap to implement mapping from other multi-media sources. 
+A Java CLI implementation of a multi-media data source to RDF Graph converter, verifying the features and API of Java graph semantics mapping library - [GraphLoom](https://github.com/jiefenn8/graphloom). Targeted to initially convert a relational database to RDF 
+semantic graph with later targets in the roadmap to implement mapping from other multi-media sources. (CSV, XML, etc)
 
 ## Getting Started
 
@@ -22,12 +24,12 @@ instructions below to get the application up and running for mapping or testing 
 
 ### Prerequisites
 
-Current version of RDFWeaver is built on Java 8. Visit the [Java site](https://www.java.com/en/download/) to download 
+Current version of RDFWeaver is built on Java 15. Visit the [Java site](https://www.java.com/en/download/) to download 
 the appropriate runtime environment.
 
 ### Downloading RDFWeaver
 
-TBD
+Binaries are located in Releases and are uploaded after every version tag release. 
 
 ### Usage example
 
@@ -113,4 +115,4 @@ Collection of other technology related projects can be found in this
 
 ## License
 
-This project is licensed under the terms of [Apache 2.0 License](./LICENSE.md). 
+This project is licensed under the terms of [GNU Affero General Public License v3](./LICENSE.md). 
